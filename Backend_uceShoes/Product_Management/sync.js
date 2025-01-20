@@ -1,5 +1,5 @@
-const sequelize = require('../config/database');
-const { Product, Category } = require('../models/associations');
+const sequelize = require('./config/database');
+const { Product, Category } = require('./models/associations');
 
 const syncDatabase = async () => {
   try {
