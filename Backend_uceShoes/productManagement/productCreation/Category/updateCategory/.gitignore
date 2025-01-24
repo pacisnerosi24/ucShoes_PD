@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environments
+.env
+
+# Sequelize
+/sequelize-cli-config.js
+
+# IDEs y editores
+.vscode/
+.idea/
+
+# Sistema de archivos de OS
+.DS_Store
+Thumbs.db
+
+# Archivos de dependencias de producción
+package-lock.json
+yarn.lock
