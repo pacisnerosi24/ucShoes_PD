@@ -1,28 +1,57 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { Sequelize, DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database');
 
-// Define the Product model
 const Product = sequelize.define('Product', {
   productId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Automatically increment the product ID
+    autoIncrement: true
   },
-  name: {
+  productName: {
     type: DataTypes.STRING,
-    allowNull: false, // Product name is required
+    allowNull: false
+  },
+  image: {
+    type: DataTypes.STRING
+  },
+  size: {
+    type: DataTypes.STRING
   },
   price: {
-    type: DataTypes.DECIMAL(10, 2), // Price with 2 decimal places
-    allowNull: false, // Price is required
+    type: DataTypes.FLOAT,
+    allowNull: false
   },
-  stock: {
+  color: {
+    type: DataTypes.STRING
+  },
+  description: {
+    type: DataTypes.TEXT
+  },
+  accessories: {
+    type: DataTypes.STRING
+  },
+  productCode: {
+    type: DataTypes.STRING
+  },
+  launchDate: {
+    type: DataTypes.DATE
+  },
+  brand: {
+    type: DataTypes.STRING
+  },
+  productStatus: {
+    type: DataTypes.STRING
+  },
+  categoryId: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Stock quantity is required
-  },
+    references: {
+      model: 'Categories',
+      key: 'categoryId'
+    }
+  }
 }, {
-  tableName: 'products', // Explicitly define table name
-  timestamps: false, // Disable timestamps since it's not needed
+  timestamps: false,
+  tableName: 'Products'
 });
 
-module.exports = Product;
+module.exports = { Product };

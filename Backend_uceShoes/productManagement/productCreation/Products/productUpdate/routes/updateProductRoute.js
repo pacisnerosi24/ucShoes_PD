@@ -1,11 +1,8 @@
 const express = require('express');
-const { updateProduct } = require('../controllers/updateProduct');
+const { updateProduct } = require('../controllers/updateProductController');
 
 const router = express.Router();
 
-/**
- * PUT route for updating a product by ID.
- */
-router.put('/api/products/:id', updateProduct);
+router.put('/update/:productId', updateProduct);
 
 module.exports = router;
