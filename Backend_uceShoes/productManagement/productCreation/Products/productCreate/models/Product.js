@@ -7,17 +7,49 @@ const Product = sequelize.define('Product', {
         primaryKey: true,
         autoIncrement: true,
     },
-    name: {
+    productName: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    description: {
-        type: DataTypes.TEXT,
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    size: {
+        type: DataTypes.STRING,
         allowNull: true,
     },
     price: {
         type: DataTypes.FLOAT,
         allowNull: false,
+    },
+    color: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    accessories: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    productCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    launchDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    brand: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    productStatus: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     categoryId: {
         type: DataTypes.INTEGER,
