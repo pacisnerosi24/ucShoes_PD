@@ -13,11 +13,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api', categoryRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Database connection and synchronization
 sequelize.sync().then(() => {
-    console.log('Database synced');
+    console.log('connect base');
 }).catch((error) => {
     console.error('Error syncing database: ', error);
 });
