@@ -1,5 +1,6 @@
 const Category = require('./Category');
-const Product = require('../Products/models/Products');
+const Product = require('../../Products/customerService/models/Products');
+
 
 // Definir la relación: Una categoría tiene muchos productos
 Category.hasMany(Product, {

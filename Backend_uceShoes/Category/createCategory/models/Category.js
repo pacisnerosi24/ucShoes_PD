@@ -16,8 +16,8 @@ const Category = sequelize.define(
     },
   },
   {
-    tableName: 'Categories', // Nombre de la tabla en la base de datos
-    timestamps: false, // Desactiva createdAt y updatedAt
+    tableName: 'Categories', // Name the table 
+    timestamps: false,
   }
 );
 

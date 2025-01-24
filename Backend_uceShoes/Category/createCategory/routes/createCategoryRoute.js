@@ -3,6 +3,6 @@ const router = express.Router();
 const createCategory = require('../controllers/createCategory');
 
 // Route to create a new category
-router.post('/', createCategory);
+router.post('/create', createCategory);
 
 module.exports = router;
