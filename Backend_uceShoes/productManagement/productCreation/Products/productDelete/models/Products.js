@@ -9,6 +9,7 @@ const Product = sequelize.define('Product', {
   },
   productName: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   image: {
     type: DataTypes.STRING,
@@ -17,13 +18,13 @@ const Product = sequelize.define('Product', {
     type: DataTypes.STRING,
   },
   price: {
-    type: DataTypes.DECIMAL,
+    type: DataTypes.FLOAT,
   },
   color: {
     type: DataTypes.STRING,
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   accessories: {
     type: DataTypes.STRING,
@@ -43,6 +44,9 @@ const Product = sequelize.define('Product', {
   categoryId: {
     type: DataTypes.INTEGER,
   },
+}, {
+  tableName: 'Products',
+  timestamps: false,
 });
 
-module.exports = { Product };
+module.exports = Product;

@@ -10,8 +10,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 
+// Routes
 app.use('/api/products', deleteProductRoute);
 
+// Test database connection
 sequelize
   .authenticate()
   .then(() => {
@@ -21,7 +23,8 @@ sequelize
     console.error('❌ Unable to connect to the database:', error);
   });
 
-const PORT = process.env.PORT || 3008;
+// Start the server
+const PORT = process.env.PORT || 3009;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
