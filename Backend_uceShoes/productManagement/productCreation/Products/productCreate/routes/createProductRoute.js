@@ -3,6 +3,6 @@ const router = express.Router();
 const { createProduct } = require('../controllers/createProductController');
 
 // POST route to create a new product
-router.post('/', createProduct);
+router.post('/create', createProduct);
 
 module.exports = router;

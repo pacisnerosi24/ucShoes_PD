@@ -2,6 +2,7 @@ const Product = require('../models/Product');
 
 const createProduct = async (req, res) => {
   try {
+    console.log('Request body:', req.body);
     const {
       productName,
       image,
