@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Define the Product model
 const Product = sequelize.define(
   'Product',
   {
@@ -14,23 +15,23 @@ const Product = sequelize.define(
       allowNull: false,
     },
     image: {
-      type: DataTypes.TEXT, // Ruta o URL de la imagen
+      type: DataTypes.TEXT,
     },
     size: {
-      type: DataTypes.STRING(20), // Talla del producto (ejemplo: M, 42)
+      type: DataTypes.STRING(20),
     },
     price: {
-      type: DataTypes.DECIMAL(10, 2), // Precio con dos decimales
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
     color: {
       type: DataTypes.STRING(50),
     },
     description: {
-      type: DataTypes.TEXT, // Descripción detallada del producto
+      type: DataTypes.TEXT,
     },
     accessories: {
-      type: DataTypes.TEXT, // Información sobre accesorios (si aplica)
+      type: DataTypes.TEXT,
     },
     productCode: {
       type: DataTypes.STRING(50),
@@ -42,23 +43,23 @@ const Product = sequelize.define(
     },
     productRegisterDate: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Fecha de creación por defecto
+      defaultValue: DataTypes.NOW,
     },
     brand: {
       type: DataTypes.STRING(50),
     },
     productStatus: {
-      type: DataTypes.INTEGER, // Estado del producto (referencia a tabla de estados)
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     categoryId: {
-      type: DataTypes.INTEGER, // Llave foránea a Categorías
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
   {
-    tableName: 'Products', // Nombre de la tabla en la base de datos
-    timestamps: false, // Desactiva createdAt y updatedAt
+    tableName: 'Products',
+    timestamps: false,
   }
 );
 
