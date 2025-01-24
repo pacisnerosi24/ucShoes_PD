@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const sequelize = require('./config/database'); // Database connection
 
 // Import routes
-const categoryRoutes = require('./routes/getAllCategoriesRoute');
+const categoryRoutes = require('./routes/getCategoryByIdRoute');
 const categoryByIdRoutes = require('./routes/getCategoryByIdRoute');
 
 const app = express();
