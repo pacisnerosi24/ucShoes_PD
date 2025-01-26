@@ -1,6 +1,8 @@
 from graphene import ObjectType, String, Float, ID
 import graphene
 from models.product import Product
+from sqlalchemy.orm import Session
+from config.database import SessionLocal
 
 class ProductType(ObjectType):
     id = ID()
@@ -13,7 +15,15 @@ class Query(ObjectType):
     get_all_products = graphene.List(ProductType)
 
     def resolve_get_product(self, info, id):
-        return Product.query.get(id)
+        
+        session: Session = SessionLocal()
+        product = session.query(Product).filter(Product.id == id).first()
+        session.close()
+        return product
 
     def resolve_get_all_products(self, info):
-        return Product.query.all()
+        
+        session: Session = SessionLocal()
+        products = session.query(Product).all()
+        session.close()
+        return products

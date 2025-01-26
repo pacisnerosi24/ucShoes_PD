@@ -1,6 +1,7 @@
 Flask
 Flask-GraphQL
 graphene
-sqlalchemy
-mysqlclient
+graphql-core
+mysql-connector-python
 python-dotenv
+SQLAlchemy

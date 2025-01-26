@@ -1,30 +1,49 @@
-from graphene import Schema
-from graphql import GraphQLError
-from graphql.execution.executors.asyncio import AsyncioExecutor
-from graphql.schema import print_schema
-from graphql import parse
-from graphene import Schema
+from graphene import ObjectType, Schema, Field, String, List
 
-# Importamos los resolvers
-from graphql.resolvers import Query
+
+PRODUCTS = [
+    {"id": "1", "name": "Product 1", "description": "Description 1", "price": "10.0"},
+    {"id": "2", "name": "Product 2", "description": "Description 2", "price": "20.0"},
+]
+
+class ProductType(ObjectType):
+    id = String()
+    name = String()
+    description = String()
+    price = String()
+
+class Query(ObjectType):
+    get_product = Field(ProductType, id=String(required=True))
+    get_all_products = List(ProductType)
+
+
+    def resolve_get_product(root, info, id):
+        for product in PRODUCTS:
+            if product["id"] == id:
+                return product
+        return None
+
+    def resolve_get_all_products(root, info):
+        return PRODUCTS
+
+
+schema = Schema(query=Query)
 
 def get_product_by_id(id):
-    schema = Schema(query=Query)
-    query = """
-    query {
-        getProduct(id: "%s") {
+    query = f"""
+    query {{
+        getProduct(id: "{id}") {{
             id
             name
             description
             price
-        }
-    }
-    """ % id
+        }}
+    }}
+    """
     result = schema.execute(query)
-    return result.data["getProduct"]
+    return result.data.get("getProduct")
 
 def get_all_products():
-    schema = Schema(query=Query)
     query = """
     query {
         getAllProducts {
@@ -36,4 +55,4 @@ def get_all_products():
     }
     """
     result = schema.execute(query)
-    return result.data["getAllProducts"]
+    return result.data.get("getAllProducts")
