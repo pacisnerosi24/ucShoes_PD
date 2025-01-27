@@ -1,1 +1,0 @@
-# Frontend ucShoes_PD
