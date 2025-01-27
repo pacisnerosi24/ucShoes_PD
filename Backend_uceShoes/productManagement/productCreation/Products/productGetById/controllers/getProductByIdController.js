@@ -2,17 +2,17 @@ const Product = require('../models/Products');
 
 const getProductById = async (req, res) => {
   try {
-    const { id } = req.params; // Extract product ID from request parameters
+    const { id } = req.params; // Extraer ID del producto desde los parámetros
     const product = await Product.findByPk(id);
 
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' }); // Handle product not found
+      return res.status(404).json({ error: 'Product not found' });
     }
 
-    res.status(200).json(product); // Send product data as a response
+    res.status(200).json(product);
   } catch (error) {
-    console.error('Error fetching product by ID:', error); // Log the error for debugging
-    res.status(500).json({ error: 'Internal server error' }); // Handle unexpected server errors
+    console.error('Error fetching product by ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
