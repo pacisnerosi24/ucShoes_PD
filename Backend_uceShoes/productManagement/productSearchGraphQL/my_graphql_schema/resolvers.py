@@ -11,19 +11,23 @@ class ProductType(ObjectType):
     price = Float()
 
 class Query(ObjectType):
-    get_product = graphene.Field(ProductType, id=ID())
+    get_product = graphene.Field(ProductType, id=ID(required=True))
     get_all_products = graphene.List(ProductType)
 
     def resolve_get_product(self, info, id):
-        
         session: Session = SessionLocal()
-        product = session.query(Product).filter(Product.id == id).first()
-        session.close()
-        return product
+        try:
+            product = session.query(Product).filter(Product.id == id).first()
+            if not product:
+                raise Exception(f"Product with ID {id} not found.")
+            return product
+        finally:
+            session.close()
 
     def resolve_get_all_products(self, info):
-        
         session: Session = SessionLocal()
-        products = session.query(Product).all()
-        session.close()
-        return products
+        try:
+            products = session.query(Product).all()
+            return products
+        finally:
+            session.close()
