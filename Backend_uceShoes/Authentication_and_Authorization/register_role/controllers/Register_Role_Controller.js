@@ -14,6 +14,12 @@ const createRole = async (req, res) => {
     validateRoleData(req.body);
 
     const { role_name, description, status } = req.body;
+
+    const existingRole = await Role.findOne({where: {role_name}});
+        if(existingRole){
+            return res.status(400).json({message: 'The role are already in use.'});
+        }
+
     const newRole = await Role.create({ role_name, description, status });
 
     const jwtSecret = getJwtSecret();
