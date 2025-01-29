@@ -1,30 +1,35 @@
 <template>
-  <div class="bg-gray-800 rounded-lg p-4 hover:shadow-lg transition duration-300">
-    <img
-      :src="product.image"
-      :alt="product.name"
-      class="h-40 w-full object-cover rounded-md"
-    />
-    <p v-if="product.tag" class="text-xs text-red-500 font-semibold uppercase mb-1">
-      {{ product.tag }}
-    </p>
-    <h3 class="text-lg font-bold text-white">{{ product.name }}</h3>
-    <p class="text-sm text-gray-400">{{ product.description }}</p>
-    <p class="text-lg font-semibold mt-2 text-green-500">${{ product.price }}</p>
-    <button class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-      Añadir al carrito
-    </button>
+  <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition hover:-translate-y-2 hover:shadow-xl">
+    <!-- Imagen del producto -->
+    <img :src="product.image" :alt="product.name" class="w-full h-64 object-cover" />
+
+    <!-- Información del producto -->
+    <div class="p-4">
+      <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+      <p class="text-gray-500 text-sm">{{ product.brand }}</p>
+      <p class="text-xl font-bold mt-2">${{ product.price }}</p>
+
+      <!-- Botón de agregar al carrito -->
+      <button
+        class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+        @click="addToCart"
+      >
+        Agregar al carrito
+      </button>
+    </div>
   </div>
 </template>
 
-  <script>
-  export default {
-    props: {
-      product: {
-        type: Object,
-        required: true,
-      },
+<script>
+export default {
+  name: "ProductCard",
+  props: {
+    product: Object, // Recibirá la información del producto
+  },
+  methods: {
+    addToCart() {
+      alert(`Añadido al carrito: ${this.product.name}`);
     },
-  };
-  </script>
-  
+  },
+};
+</script>
