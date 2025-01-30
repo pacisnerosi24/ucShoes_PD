@@ -26,8 +26,8 @@
 
 <script>
 
-import { useCartStore } from "@/store/cart";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "../store/cart";
+
 
 export default {
   name: "ProductCard",

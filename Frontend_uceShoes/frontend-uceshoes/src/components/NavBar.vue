@@ -47,13 +47,19 @@
 
 <script>
 import { LucideShoppingCart, LucideUser, LucideSearch } from "lucide-vue-next";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "../store/cart";
+import { ref } from "vue";
 
 export default {
   name: "NavBar",
   setup() {
     const cartStore = useCartStore();
     return { cartStore };
+  },
+  components: {
+    LucideShoppingCart,
+    LucideUser,
+    LucideSearch,
   },
 };
 </script>
