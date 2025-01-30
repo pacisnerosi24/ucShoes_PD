@@ -25,15 +25,24 @@
 </template>
 
 <script>
+
+import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/store/cart";
+
 export default {
   name: "ProductCard",
   props: {
     product: Object,
   },
-  methods: {
-    addToCart() {
-      alert(`Añadido al carrito: ${this.product.name}`);
-    },
+  setup(props) {
+    const cartStore = useCartStore();
+
+    const addToCart = () => {
+      cartStore.addToCart(props.product);
+      alert(`Añadido al carrito: ${props.product.name}`);
+    };
+
+    return { addToCart };
   },
 };
 </script>
