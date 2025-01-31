@@ -46,6 +46,6 @@ const createCategory = require('../controllers/createCategory');
  *                   type: string
  *                   example: Something went wrong
  */
-router.post('/create', createCategory);
+router.post('/', createCategory);
 
 module.exports = router;
