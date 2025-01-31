@@ -40,7 +40,7 @@ const Product = sequelize.define('Product', {
     type: DataTypes.STRING
   },
   productStatus: {
-    type: DataTypes.STRING
+    type: DataTypes.INTEGER
   },
   categoryId: {
     type: DataTypes.INTEGER,
