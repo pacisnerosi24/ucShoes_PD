@@ -3,6 +3,7 @@ const Product = require('../models/Products');
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params; // Extraer ID del producto desde los parámetros
+    console.log(`🔍 Searching for product with ID: ${id}`);
     const product = await Product.findByPk(id);
 
     if (!product) {
