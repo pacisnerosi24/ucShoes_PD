@@ -81,6 +81,6 @@ const { createProduct } = require('../controllers/createProductController');
  *                   example: Something went wrong
  */
 // POST route to create a new product
-router.post('/create', createProduct);
+router.post('/', createProduct);
 
 module.exports = router;
