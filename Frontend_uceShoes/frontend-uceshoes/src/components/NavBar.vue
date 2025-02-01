@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <!-- Icons -->
+      <!-- Icons y Botón de Sesión -->
       <div class="flex space-x-6 items-center">
         <!-- Ícono del carrito con contador de productos -->
         <router-link to="/cart" class="relative text-gray-600 hover:text-black transition-colors">
@@ -36,9 +36,25 @@
           </span>
         </router-link>
 
-        <!-- Ícono de usuario -->
-        <button class="text-gray-600 hover:text-black transition-colors">
+        <!-- Ícono de usuario (solo si NO ha iniciado sesión) -->
+        <router-link v-if="!isAuthenticated" to="/login" class="hidden md:block text-gray-600 hover:text-black transition-colors">
           <LucideUser class="w-6 h-6" />
+        </router-link>
+
+        <!-- Botón de Iniciar Sesión (si no está autenticado) -->
+        <router-link 
+          v-if="!isAuthenticated"
+          to="/login"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all">
+          Iniciar Sesión
+        </router-link>
+
+        <!-- Botón de Cerrar Sesión (si está autenticado) -->
+        <button 
+          v-if="isAuthenticated"
+          @click="logout"
+          class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all">
+          Cerrar Sesión
         </button>
       </div>
     </div>
@@ -48,13 +64,19 @@
 <script>
 import { LucideShoppingCart, LucideUser, LucideSearch } from "lucide-vue-next";
 import { useCartStore } from "../store/cart";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export default {
   name: "NavBar",
   setup() {
     const cartStore = useCartStore();
-    return { cartStore };
+    const isAuthenticated = computed(() => localStorage.getItem("token") !== null);
+
+    const logout = () => {
+      localStorage.removeItem("token"); // Elimina el token de autenticación
+    };
+
+    return { cartStore, isAuthenticated, logout };
   },
   components: {
     LucideShoppingCart,
