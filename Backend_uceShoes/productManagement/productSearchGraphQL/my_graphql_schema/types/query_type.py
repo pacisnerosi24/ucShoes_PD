@@ -1,17 +1,27 @@
 import graphene
-from my_graphql_schema.resolvers import ProductType
+from models.product import Product
+from config.database import SessionLocal
+
+class ProductType(graphene.ObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    description = graphene.String()
+    price = graphene.Float()
 
 class QueryType(graphene.ObjectType):
     get_product = graphene.Field(ProductType, id=graphene.Int())
     get_all_products = graphene.List(ProductType)
 
     def resolve_get_product(self, info, id):
-        # Simulación de datos
-        return {"id": id, "name": f"Product {id}", "description": "Sample", "price": 10.0}
+        session = SessionLocal()
+        try:
+            return session.query(Product).filter(Product.id == id).first()
+        finally:
+            session.close()
 
     def resolve_get_all_products(self, info):
-        # Simulación de lista de productos
-        return [
-            {"id": 1, "name": "Product A", "description": "Description A", "price": 29.99},
-            {"id": 2, "name": "Product B", "description": "Description B", "price": 49.99}
-        ]
+        session = SessionLocal()
+        try:
+            return session.query(Product).all()
+        finally:
+            session.close()
