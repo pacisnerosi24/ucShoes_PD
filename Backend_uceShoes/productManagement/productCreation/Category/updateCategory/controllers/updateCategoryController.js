@@ -1,15 +1,20 @@
-const  Category  = require('../models/Category');
+const Category  = require('../models/Category');
 
 const updateCategory = async (req, res) => {
-  const { id } = req.params;  // Extract category ID from URL params
+  const categoryId = parseInt(req.params.id, 10); // Extract category ID from URL params
   const { name } = req.body;  // Extract the new category name from request body
 
+  if (isNaN(categoryId)) {
+    return res.status(400).json({ error: 'Invalid category ID' }); // Validate ID
+  }
   // Validate if the name is provided
   if (!name) {
     return res.status(400).json({ error: 'Name is required' });
   }
 
   try {
+
+    console.log(`🔄 Updating category with ID: ${categoryId}`);
     // Find category by ID
     const category = await Category.findByPk(id);
     if (!category) {
