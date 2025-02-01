@@ -26,8 +26,8 @@ const router = express.Router();
  *                   name:
  *                     type: string
  *                     description: The name of the category.
- *                     example: Electronics
+ *                     example: running
  */
-router.get('/search', getAllCategories);
+router.get('/', getAllCategories);
 
 module.exports = router;
