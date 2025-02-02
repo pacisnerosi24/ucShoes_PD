@@ -9,6 +9,7 @@ const getCategoryById = async (req, res) => {
     }
     console.log(`🔍 Searching for category with ID: ${categoryId}`);
     const category = await Category.findByPk(categoryId); // Find category by primary key
+    console.log('✅ Category found:', category);
 
     if (!category) {
       return res.status(404).json({ error: 'Category not found' });
