@@ -25,7 +25,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: 'http://localhost:3001', // Base URL of your API
+                url: 'http://localhost:3006', // Base URL of your API
             },
         ],
     },
@@ -51,7 +51,7 @@ sequelize
     });
 
 // Start server
-const PORT = process.env.PORT || 3001; // Ensure the port is 3001 as mentioned earlier
+const PORT = process.env.PORT || 3006; // Ensure the port is 3001 as mentioned earlier
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);

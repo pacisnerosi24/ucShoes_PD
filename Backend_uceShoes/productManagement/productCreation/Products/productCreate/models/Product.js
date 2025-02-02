@@ -48,8 +48,8 @@ const Product = sequelize.define('Product', {
         allowNull: true,
     },
     productStatus: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     categoryId: {
         type: DataTypes.INTEGER,

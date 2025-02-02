@@ -48,6 +48,6 @@ const router = express.Router();
  *                   type: string
  *                   example: Something went wrong
  */
-router.delete('/delete/:productId', deleteProduct);
+router.delete('/:productId', deleteProduct);
 
 module.exports = router;

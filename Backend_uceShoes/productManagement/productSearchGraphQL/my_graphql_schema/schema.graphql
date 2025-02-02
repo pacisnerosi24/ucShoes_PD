@@ -17,7 +17,7 @@ type Product {
   """
   The price of the product.
   """
-  price: Float
+  price: Float!
 }
 
 """
@@ -31,5 +31,5 @@ type Query {
   """
   Get a list of all available products.
   """
-  getAllProducts: [Product]
+  getAllProducts: [Product!]!
 }

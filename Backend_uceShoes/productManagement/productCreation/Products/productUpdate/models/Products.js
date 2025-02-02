@@ -40,7 +40,7 @@ const Product = sequelize.define('Product', {
     type: DataTypes.STRING
   },
   productStatus: {
-    type: DataTypes.STRING
+    type: DataTypes.INTEGER
   },
   categoryId: {
     type: DataTypes.INTEGER,
@@ -54,4 +54,4 @@ const Product = sequelize.define('Product', {
   tableName: 'Products'
 });
 
-module.exports = { Product };
+module.exports =  Product ;

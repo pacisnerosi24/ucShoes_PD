@@ -25,7 +25,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.PORT || 3003}`,
+        url: `http://localhost:${process.env.PORT || 3008}`,
       },
     ],
   },
@@ -45,7 +45,7 @@ sequelize
   .catch((error) => console.error('Error syncing database: ', error));
 
 // Start server
-const PORT = process.env.PORT || 3003; // Changed port to 3003 to avoid conflicts with other services
+const PORT = process.env.PORT || 3008; // Changed port to 3003 to avoid conflicts with other services
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);

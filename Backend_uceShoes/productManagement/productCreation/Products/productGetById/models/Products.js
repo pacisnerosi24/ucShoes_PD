@@ -12,20 +12,49 @@ const Product = sequelize.define(
     productName: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        notEmpty: true, 
-      },
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    size: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     price: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      validate: {
-        isDecimal: true, 
-        min: 0, 
-      },
+    },
+    color: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     description: {
       type: DataTypes.TEXT,
+    },
+    accessories: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    productCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    launchDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    brand: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    productStatus: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const deleteCategoryController = require('../controllers/deleteCategoryController');
+const  deleteCategory  = require('../controllers/deleteCategoryController');
 
 /**
  * @swagger
@@ -47,6 +47,6 @@ const deleteCategoryController = require('../controllers/deleteCategoryControlle
  *                   type: string
  *                   example: Something went wrong
  */
-router.delete('/:id', deleteCategoryController);
+router.delete('/:id', deleteCategory);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/categories/search:
+ * /api/categories:
  *   get:
  *     summary: Retrieve all categories
  *     description: Retrieve a list of all categories from the database.
@@ -26,7 +26,7 @@ const router = express.Router();
  *                   name:
  *                     type: string
  *                     description: The name of the category.
- *                     example: Electronics
+ *                     example: running
  */
 router.get('/search', getAllCategories);
 
