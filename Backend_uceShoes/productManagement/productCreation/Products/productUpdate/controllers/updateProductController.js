@@ -1,8 +1,8 @@
-const { Product } = require('../models/Products');
+const  Product  = require('../models/Products');
 
 const updateProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
+    const productId = parseInt(req.params.productId, 10);
     const { productName, image, size, price, color, description, accessories, productCode, launchDate, brand, productStatus, categoryId } = req.body;
 
     const product = await Product.findOne({ where: { productId } });
