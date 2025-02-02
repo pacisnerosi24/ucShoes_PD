@@ -36,26 +36,23 @@
           </span>
         </router-link>
 
-        <!-- Ícono de usuario (solo si NO ha iniciado sesión) -->
-        <router-link v-if="!isAuthenticated" to="/login" class="hidden md:block text-gray-600 hover:text-black transition-colors">
-          <LucideUser class="w-6 h-6" />
-        </router-link>
+        <!-- Si el usuario está autenticado, muestra el icono de usuario y "Cerrar Sesión" -->
+        <div v-if="isAuthenticated" class="flex items-center space-x-3">
+          <LucideUser class="w-6 h-6 text-gray-600" />
+          <button 
+            @click="logout"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all">
+            Cerrar Sesión
+          </button>
+        </div>
 
-        <!-- Botón de Iniciar Sesión (si no está autenticado) -->
+        <!-- Si el usuario NO está autenticado, muestra "Iniciar Sesión" -->
         <router-link 
           v-if="!isAuthenticated"
           to="/login"
           class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all">
           Iniciar Sesión
         </router-link>
-
-        <!-- Botón de Cerrar Sesión (si está autenticado) -->
-        <button 
-          v-if="isAuthenticated"
-          @click="logout"
-          class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all">
-          Cerrar Sesión
-        </button>
       </div>
     </div>
   </nav>
@@ -64,16 +61,23 @@
 <script>
 import { LucideShoppingCart, LucideUser, LucideSearch } from "lucide-vue-next";
 import { useCartStore } from "../store/cart";
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   name: "NavBar",
   setup() {
     const cartStore = useCartStore();
-    const isAuthenticated = computed(() => localStorage.getItem("token") !== null);
+    const isAuthenticated = ref(false);
+
+    // Detectar si hay un token al cargar la página
+    onMounted(() => {
+      isAuthenticated.value = localStorage.getItem("token") !== null;
+    });
 
     const logout = () => {
-      localStorage.removeItem("token"); // Elimina el token de autenticación
+      localStorage.removeItem("token");
+      isAuthenticated.value = false; // Actualiza la variable reactiva
+      window.location.reload(); // Recarga la página para reflejar cambios
     };
 
     return { cartStore, isAuthenticated, logout };
