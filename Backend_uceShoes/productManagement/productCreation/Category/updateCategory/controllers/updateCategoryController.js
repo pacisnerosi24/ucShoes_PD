@@ -16,7 +16,8 @@ const updateCategory = async (req, res) => {
 
     console.log(`🔄 Updating category with ID: ${categoryId}`);
     // Find category by ID
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(categoryId);
+    console.log('✅ Category found:', category);
     if (!category) {
       return res.status(404).json({ error: 'Category not found' });
     }
