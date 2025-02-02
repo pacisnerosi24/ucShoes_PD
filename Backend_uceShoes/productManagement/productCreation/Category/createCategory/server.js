@@ -4,11 +4,18 @@ require('dotenv').config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const app = express();
+const  sequelize  = require('./config/database');
+const Category = require('./models/Category');
 const PORT = process.env.PORT || 3005;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+//Synchronize the database to ensure that the Categories table exists
+sequelize.sync({ alter: true }).then(() => {
+    console.log('✅ Table Categories synchronized');
+  });
 
 // Swagger configuration
 const swaggerOptions = {
