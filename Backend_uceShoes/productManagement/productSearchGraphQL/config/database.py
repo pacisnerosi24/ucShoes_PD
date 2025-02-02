@@ -22,5 +22,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Declare the base class for the models
 Base = declarative_base()
 
-# Creates all tables defined in the models, if they do not exist
-Base.metadata.create_all(bind=engine)
+# Ensure tables are created
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+init_db()

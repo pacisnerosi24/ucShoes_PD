@@ -17,6 +17,8 @@ class Query(ObjectType):
         session: Session = SessionLocal()
         try:
             product = session.query(Product).filter(Product.id == id).first()
+            if not product:
+                return None  # 🔹 Si el producto no existe, devuelve `None`
             return product
         finally:
             session.close()
@@ -24,9 +26,10 @@ class Query(ObjectType):
     def resolve_get_all_products(self, info):
         session: Session = SessionLocal()
         try:
-            return session.query(Product).all()
+            products = session.query(Product).all()
+            return products if products else []  # 🔹 Devuelve lista vacía si no hay productos
         finally:
             session.close()
 
-# Define the schema
+# Define el esquema
 schema = Schema(query=Query)
