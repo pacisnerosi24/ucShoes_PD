@@ -20,9 +20,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+  if (to.path === "/login" && token) {
+    console.log("Usuario ya autenticado, redirigiendo a HomePage.");
+    next("/");
+  } else if (to.matched.some(record => record.meta.requiresAuth) && !token) {
     console.warn("Acceso denegado: Se requiere autenticación.");
-    next(false); // No redirige, solo bloquea la navegación
+    next(false);
   } else {
     next();
   }
