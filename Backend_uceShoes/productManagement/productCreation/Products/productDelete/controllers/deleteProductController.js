@@ -1,9 +1,9 @@
-const { Product } = require('../models/Products');
+const  Product  = require('../models/Products');
 
 const deleteProduct = async (req, res) => {
-  const { productId } = req.params;
 
   try {
+    const productId = parseInt(req.params.productId, 10);
     const product = await Product.findByPk(productId);
 
     if (!product) {
