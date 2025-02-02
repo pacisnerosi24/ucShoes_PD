@@ -11,8 +11,12 @@
           <label class="block text-gray-700">Contraseña</label>
           <input v-model="password" type="password" required class="w-full px-3 py-2 border rounded-lg" />
         </div>
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg">Ingresar</button>
-        <p v-if="errorMessage" class="text-red-500 mt-2 text-center">{{ errorMessage }}</p>
+        <div class="flex justify-between space-x-4 mt-4">
+          <button type="submit" class="w-1/2 bg-blue-500 text-white py-2 rounded-lg">Ingresar</button>
+          <router-link to="/register" class="w-1/2 bg-green-500 text-white py-2 rounded-lg text-center">
+            Registrarse
+          </router-link>
+        </div>
       </form>
     </div>
   </div>
@@ -38,10 +42,10 @@ export default {
         });
 
         if (response.data.token) {
-          console.log("Token recibido:", response.data.token); // 🔹 Verifica que el backend envía el token
+          console.log("Token recibido:", response.data.token); //Verifica que el backend envía el token
           localStorage.setItem("token", response.data.token);
-          console.log("Token guardado en LocalStorage:", localStorage.getItem("token")); // 🔹 Verifica que se almacena correctamente
-          window.location.href = "/"; // 🔹 Redirige a HomePage.vue
+          console.log("Token guardado en LocalStorage:", localStorage.getItem("token")); //Verifica que se almacena correctamente
+          window.location.href = "/"; //Redirige a HomePage.vue
         } else {
           console.error("No se recibió token del servidor.");
           this.errorMessage = "Error: No se pudo obtener el token.";
