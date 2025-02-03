@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'Backend_uceShoes/productSearchGraphQL/**'
-    branches: ["PENDIENTE"]
+    branches: ["TestConectionProducts"]
 
 jobs:
   build-deploy:
