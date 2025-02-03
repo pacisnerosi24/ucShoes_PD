@@ -3,12 +3,14 @@ import HomePage from "../views/HomePage.vue";
 import ProductDetail from "../views/ProductDetail.vue";
 import CartPage from "../views/CartPage.vue";
 import LoginPage from "../views/LoginPage.vue";
+import RegisterPage from "../views/RegisterPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
   { path: "/product/:id", component: ProductDetail, props: true },
   { path: "/cart", component: CartPage },
-  { path: "/login", component: LoginPage }
+  { path: "/login", component: LoginPage },
+  {path: "/register", component: RegisterPage} 
 ];
 
 const router = createRouter({
