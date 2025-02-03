@@ -5,8 +5,7 @@ on:
     paths:
       - 'api-gateway/**'
     branches:
-    - TestConectionProducts
-
+    - QA
 jobs:
   build:
     runs-on: ubuntu-latest
