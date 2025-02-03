@@ -1,11 +1,10 @@
 <template>
   <div>
     <h2 class="text-3xl font-bold text-center mb-8">Nuestros Productos</h2>
-    <div v-if="loading" class="text-center">Cargando productos...</div>
-    <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div v-if="products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <ProductCard v-for="product in products" :key="product.id" :product="product" />
     </div>
+    <p v-else class="text-center text-gray-500">No hay productos disponibles</p>
   </div>
 </template>
 
@@ -15,23 +14,16 @@ import { getAllProducts } from "../utils/productService";
 
 export default {
   name: "HomePage",
-  components: { ProductCard },
+  components: {
+    ProductCard,
+  },
   data() {
     return {
-      products: [],
-      loading: true,
-      error: null,
+      products: [], // ✅ Inicializar `products`
     };
   },
-  async created() {
-    try {
-      const response = await getAllProducts();
-      this.products = response.data;
-    } catch (err) {
-      this.error = "Error al cargar productos.";
-    } finally {
-      this.loading = false;
-    }
-  },
+  async mounted() {
+    this.products = await getAllProducts(); // ✅ Llamar a la API al montar el componente
+  }
 };
 </script>

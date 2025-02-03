@@ -4,12 +4,12 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 8080; // API Gateway in the port 8080
+const PORT = process.env.PORT || 8080; // API Gateway en el puerto 8080
 
 app.use(cors());
 app.use(express.json());
 
-// 📌 ports
+// 📌 Definir los microservicios
 const services = {
   createProduct: 'http://localhost:3000',
   getAllProducts: 'http://localhost:3004',
@@ -26,24 +26,27 @@ const services = {
   graphql: 'http://localhost:3010',
 };
 
-// 📌 Rutas para productos
-app.use('/api/products', createProxyMiddleware({ target: services.createProduct, changeOrigin: true }));
-app.use('/api/products', createProxyMiddleware({ target: services.getAllProducts, changeOrigin: true }));
-app.use('/api/products/:id', createProxyMiddleware({ target: services.getProductById, changeOrigin: true }));
-app.use('/api/products/update/:id', createProxyMiddleware({ target: services.updateProduct, changeOrigin: true }));
-app.use('/api/products/delete/:id', createProxyMiddleware({ target: services.deleteProduct, changeOrigin: true }));
+// 📌 Función para crear rutas dinámicas en el API Gateway
+const setupProxy = (route, target) => {
+  app.use(route, createProxyMiddleware({ target, changeOrigin: true }));
+};
 
-// 📌 Rutas para categorías
-app.use('/api/categories', createProxyMiddleware({ target: services.createCategory, changeOrigin: true }));
-app.use('/api/categories/search', createProxyMiddleware({ target: services.getAllCategories, changeOrigin: true }));
-app.use('/api/categories/:id', createProxyMiddleware({ target: services.getCategoryById, changeOrigin: true }));
-app.use('/api/categories/update/:id', createProxyMiddleware({ target: services.updateCategory, changeOrigin: true }));
-app.use('/api/categories/delete/:id', createProxyMiddleware({ target: services.deleteCategory, changeOrigin: true }));
+// 📌 Configurar las rutas del API Gateway
+setupProxy('/api/products/create', services.createProduct);
+setupProxy('/api/products', `${services.getAllProducts}/api/products`);
+setupProxy('/api/products/:id', services.getProductById);
+setupProxy('/api/products/update/:id', services.updateProduct);
+setupProxy('/api/products/delete/:id', services.deleteProduct);
 
-// 📌 Rutas para GraphQL
-app.use('/graphql', createProxyMiddleware({ target: services.graphql, changeOrigin: true }));
+setupProxy('/api/categories/create', services.createCategory);
+setupProxy('/api/categories/search', services.getAllCategories);
+setupProxy('/api/categories/:id', services.getCategoryById);
+setupProxy('/api/categories/update/:id', services.updateCategory);
+setupProxy('/api/categories/delete/:id', services.deleteCategory);
 
-// 📌 Servidor corriendo
+setupProxy('/graphql', services.graphql);
+
+// 📌 Iniciar el API Gateway
 app.listen(PORT, () => {
-  console.log(`🚀 API Gateway run in http://localhost:${PORT}`);
+  console.log(`🚀 API Gateway corriendo en http://localhost:${PORT}`);
 });

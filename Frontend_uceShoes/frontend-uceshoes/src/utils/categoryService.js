@@ -1,20 +1,9 @@
-import { api } from "./api";
-
-// Crear una nueva categoría
-export const createCategory = async (categoryData) => {
-  try {
-    const response = await api.post("/api/categories", categoryData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creando categoría:", error);
-    return null;
-  }
-};
+import { back } from "./api";
 
 // Obtener todas las categorías
 export const getAllCategories = async () => {
   try {
-    const response = await api.get("/api/categories/search");
+    const response = await back.get("/api/categories/search");
     return response.data;
   } catch (error) {
     console.error("Error obteniendo categorías:", error);
@@ -22,35 +11,46 @@ export const getAllCategories = async () => {
   }
 };
 
-// Obtener categoría por ID
+// Obtener una categoría por ID
 export const getCategoryById = async (id) => {
   try {
-    const response = await api.get(`/api/categories/${id}`);
+    const response = await back.get(`/api/categories/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error obteniendo categoría:", error);
+    console.error(`Error obteniendo la categoría ${id}:`, error);
     return null;
   }
 };
 
-// Actualizar categoría por ID
+// Crear una nueva categoría
+export const createCategory = async (categoryData) => {
+  try {
+    const response = await back.post("/api/categories", categoryData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creando categoría:", error);
+    return null;
+  }
+};
+
+// Actualizar una categoría
 export const updateCategory = async (id, categoryData) => {
   try {
-    const response = await api.put(`/api/categories/update/${id}`, categoryData);
+    const response = await back.put(`/api/categories/${id}`, categoryData);
     return response.data;
   } catch (error) {
-    console.error("Error actualizando categoría:", error);
+    console.error(`Error actualizando la categoría ${id}:`, error);
     return null;
   }
 };
 
-// Eliminar categoría por ID
+// Eliminar una categoría
 export const deleteCategory = async (id) => {
   try {
-    const response = await api.delete(`/api/categories/delete/${id}`);
-    return response.data;
+    await back.delete(`/api/categories/${id}`);
+    return { message: "Categoría eliminada con éxito" };
   } catch (error) {
-    console.error("Error eliminando categoría:", error);
+    console.error(`Error eliminando la categoría ${id}:`, error);
     return null;
   }
 };

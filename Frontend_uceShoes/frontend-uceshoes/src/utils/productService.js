@@ -1,20 +1,9 @@
-import { api } from "./api";
-
-// Crear un nuevo producto
-export const createProduct = async (productData) => {
-  try {
-    const response = await api.post("/api/products", productData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creando producto:", error);
-    return null;
-  }
-};
+import { back } from "./api";
 
 // Obtener todos los productos
 export const getAllProducts = async () => {
   try {
-    const response = await api.get("/api/products/all");
+    const response = await back.get("/api/products"); // Se usa API Gateway
     return response.data;
   } catch (error) {
     console.error("Error obteniendo productos:", error);
@@ -22,35 +11,46 @@ export const getAllProducts = async () => {
   }
 };
 
-// Obtener producto por ID
+// Obtener un producto por ID
 export const getProductById = async (id) => {
   try {
-    const response = await api.get(`/api/products/${id}`);
+    const response = await back.get(`/api/products/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error obteniendo producto:", error);
+    console.error(`Error obteniendo el producto ${id}:`, error);
     return null;
   }
 };
 
-// Actualizar producto por ID
+// Crear un nuevo producto
+export const createProduct = async (productData) => {
+  try {
+    const response = await back.post("/api/products", productData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creando producto:", error);
+    return null;
+  }
+};
+
+// Actualizar un producto
 export const updateProduct = async (id, productData) => {
   try {
-    const response = await api.put(`/api/products/update/${id}`, productData);
+    const response = await back.put(`/api/products/${id}`, productData);
     return response.data;
   } catch (error) {
-    console.error("Error actualizando producto:", error);
+    console.error(`Error actualizando el producto ${id}:`, error);
     return null;
   }
 };
 
-// Eliminar producto por ID
+// Eliminar un producto
 export const deleteProduct = async (id) => {
   try {
-    const response = await api.delete(`/api/products/delete/${id}`);
-    return response.data;
+    await back.delete(`/api/products/${id}`);
+    return { message: "Producto eliminado con éxito" };
   } catch (error) {
-    console.error("Error eliminando producto:", error);
+    console.error(`Error eliminando el producto ${id}:`, error);
     return null;
   }
 };

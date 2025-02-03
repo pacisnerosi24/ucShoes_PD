@@ -8,31 +8,35 @@ const Product = sequelize.define(
     productId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, // Auto-increment for product ID
+      autoIncrement: true,
     },
     productName: {
       type: DataTypes.STRING,
-      allowNull: false, // Product name is required
+      allowNull: false,
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false, // Price is required
+      allowNull: false,
     },
     description: {
-      type: DataTypes.TEXT, // Optional description for the product
+      type: DataTypes.TEXT,
+    },
+    image: {
+      type: DataTypes.STRING, 
+      allowNull: true, 
     },
     productStatus: {
       type: DataTypes.INTEGER,
-      allowNull: false, // Product status is required
+      allowNull: false,
     },
     categoryId: {
       type: DataTypes.INTEGER,
-      allowNull: false, // Foreign key for category
+      allowNull: false,
     },
   },
   {
-    tableName: 'Products', // Explicitly define table name
-    timestamps: false, // Disable timestamps
+    tableName: 'Products',
+    timestamps: false,
   }
 );
 
