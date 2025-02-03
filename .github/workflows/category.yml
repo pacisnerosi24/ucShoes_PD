@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - 'Backend_uceShoes/productManagement/Category/**'
-    branches:  
-    - TestConectionProducts
+    branches:
+      - TestConectionProducts  # Asegúrate de que esta es la rama correcta
 
 jobs:
   build:
@@ -55,5 +55,9 @@ jobs:
                 -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
                 -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
                 -e DB_NAME=${{ secrets.DB_NAME }} \
+                -e AWS_ACCESS_KEY_ID_S3=${{ secrets.AWS_ACCESS_KEY_ID_S3 }} \
+                -e AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }} \
+                -e AWS_REGION_S3=${{ secrets.AWS_REGION_S3 }} \
+                -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
                 ${{ secrets.DOCKER_USERNAME }}/$service:latest
             done
