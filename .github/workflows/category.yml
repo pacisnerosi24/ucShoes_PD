@@ -20,7 +20,13 @@ jobs:
       - name: Build & Push Docker images
         run: |
           for service in createCategory deleteCategory getAllCategories getCategoryById updateCategory; do
-            docker build Backend_uceShoes/productManagement/Category/$service/. -t ${{ secrets.DOCKER_USERNAME }}/$service:latest
+            docker build Backend_uceShoes/productManagement/Category/$service/. \
+              --build-arg POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+              --build-arg POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+              --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+              --build-arg POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} \
+              --build-arg POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+              -t ${{ secrets.DOCKER_USERNAME }}/$service:latest
             docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
           done
 
@@ -39,5 +45,11 @@ jobs:
               sudo docker stop $service || true
               sudo docker rm $service || true
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/$service:latest
-              sudo docker run -d --name $service -p 3005:3005 ${{ secrets.DOCKER_USERNAME }}/$service:latest
+              sudo docker run -d --name $service -p 3005:3005 \
+                -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+                -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+                -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+                -e POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} \
+                -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+                ${{ secrets.DOCKER_USERNAME }}/$service:latest
             done

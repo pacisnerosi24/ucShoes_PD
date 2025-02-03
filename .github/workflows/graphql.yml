@@ -19,7 +19,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Docker image
         run: |
-          docker build Backend_uceShoes/productSearchGraphQL/. -t ${{ secrets.DOCKER_USERNAME }}/graphql:latest
+          docker build Backend_uceShoes/productSearchGraphQL/. \
+            --build-arg MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+            --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
+            --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+            --build-arg MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
+            --build-arg MYSQL_PORT=${{ secrets.MYSQL_PORT }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/graphql:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/graphql:latest
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
@@ -31,4 +37,10 @@ jobs:
             sudo docker stop graphql || true
             sudo docker rm graphql || true
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/graphql:latest
-            sudo docker run -d --name graphql -p 3010:3010 ${{ secrets.DOCKER_USERNAME }}/graphql:latest
+            sudo docker run -d --name graphql -p 3010:3010 \
+              -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+              -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
+              -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+              -e MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
+              -e MYSQL_PORT=${{ secrets.MYSQL_PORT }} \
+              ${{ secrets.DOCKER_USERNAME }}/graphql:latest
