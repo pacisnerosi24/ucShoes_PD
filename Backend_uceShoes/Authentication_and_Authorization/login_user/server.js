@@ -4,8 +4,15 @@ const sequelize = require('./config/Database');
 const protectedLogin = require('./routes/protectes_userLogin');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: "GET,POST",
+  allowedHeaders: "Content-Type,Authorization"
+}));
 
 app.use(bodyParser.json());
 
@@ -25,4 +32,3 @@ sequelize.sync({ force: false })
   .catch((error) => {
     console.error('Error al sincronizar la base de datos:', error);
   });
-2

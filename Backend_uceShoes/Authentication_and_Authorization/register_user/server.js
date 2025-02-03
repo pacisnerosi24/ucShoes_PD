@@ -4,8 +4,15 @@ const sequelize = require('./config/Database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const registerRoutes = require('./routes/Register_User_Routes');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: "POST",
+  allowedHeaders: "Content-Type"
+}));
 
 app.use(bodyParser.json());
 

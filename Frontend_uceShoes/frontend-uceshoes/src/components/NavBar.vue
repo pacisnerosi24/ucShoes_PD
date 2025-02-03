@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <!-- Icons -->
+      <!-- Icons y Botón de Sesión -->
       <div class="flex space-x-6 items-center">
         <!-- Ícono del carrito con contador de productos -->
         <router-link to="/cart" class="relative text-gray-600 hover:text-black transition-colors">
@@ -36,10 +36,23 @@
           </span>
         </router-link>
 
-        <!-- Ícono de usuario -->
-        <button class="text-gray-600 hover:text-black transition-colors">
-          <LucideUser class="w-6 h-6" />
-        </button>
+        <!-- Si el usuario está autenticado, muestra el icono de usuario y "Cerrar Sesión" -->
+        <div v-if="isAuthenticated" class="flex items-center space-x-3">
+          <LucideUser class="w-6 h-6 text-gray-600" />
+          <button 
+            @click="logout"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all">
+            Cerrar Sesión
+          </button>
+        </div>
+
+        <!-- Si el usuario NO está autenticado, muestra "Iniciar Sesión" -->
+        <router-link 
+          v-if="!isAuthenticated"
+          to="/login"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-all">
+          Iniciar Sesión
+        </router-link>
       </div>
     </div>
   </nav>
@@ -48,13 +61,26 @@
 <script>
 import { LucideShoppingCart, LucideUser, LucideSearch } from "lucide-vue-next";
 import { useCartStore } from "../store/cart";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   name: "NavBar",
   setup() {
     const cartStore = useCartStore();
-    return { cartStore };
+    const isAuthenticated = ref(false);
+
+    // Detectar si hay un token al cargar la página
+    onMounted(() => {
+      isAuthenticated.value = localStorage.getItem("token") !== null;
+    });
+
+    const logout = () => {
+      localStorage.removeItem("token");
+      isAuthenticated.value = false; // Actualiza la variable reactiva
+      window.location.reload(); // Recarga la página para reflejar cambios
+    };
+
+    return { cartStore, isAuthenticated, logout };
   },
   components: {
     LucideShoppingCart,
