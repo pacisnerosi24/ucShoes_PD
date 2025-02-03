@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - 'api-gateway/**'
-    branches: ["TestConectionProducts"]
+    branches: 
+    - TestConectionProducts
 
 jobs:
   build:

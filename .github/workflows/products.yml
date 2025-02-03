@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - 'Backend_uceShoes/productManagement/Products/**'
-    branches: ["TestConectionProducts"]
+    branches:  
+      - TestConectionProducts
+    
 
 jobs:
   build:
