@@ -17,17 +17,13 @@ class Query(ObjectType):
     def resolve_get_product(self, info, id):
         session: Session = SessionLocal()
         try:
-            product = session.query(Product).filter(Product.id == id).first()
-            if not product:
-                raise Exception(f"Product with ID {id} not found.")
-            return product
+            return session.query(Product).filter(Product.id == id).first()
         finally:
             session.close()
 
     def resolve_get_all_products(self, info):
         session: Session = SessionLocal()
         try:
-            products = session.query(Product).all()
-            return products
+            return session.query(Product).all()
         finally:
             session.close()

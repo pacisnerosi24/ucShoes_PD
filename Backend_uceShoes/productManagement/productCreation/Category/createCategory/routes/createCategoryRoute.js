@@ -18,7 +18,7 @@ const createCategory = require('../controllers/createCategory');
  *               name:
  *                 type: string
  *                 description: The name of the category to create.
- *                 example: Electronics
+ *                 example: running
  *     responses:
  *       201:
  *         description: Category created successfully.
@@ -46,6 +46,6 @@ const createCategory = require('../controllers/createCategory');
  *                   type: string
  *                   example: Something went wrong
  */
-router.post('/create', createCategory);
+router.post('/', createCategory);
 
 module.exports = router;

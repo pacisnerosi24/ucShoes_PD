@@ -40,10 +40,10 @@ const createProduct = async (req, res) => {
     });
 
     // Responder con el producto creado
-    res.status(201).json(newProduct);
+    return res.status(201).json(newProduct);
   } catch (error) {
     console.error('Error creating product:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 

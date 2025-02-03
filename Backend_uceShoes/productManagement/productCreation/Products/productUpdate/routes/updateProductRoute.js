@@ -98,6 +98,6 @@ const router = express.Router();
  *                   type: string
  *                   example: Something went wrong
  */
-router.put('/update/:productId', updateProduct);
+router.put('/:productId', updateProduct);
 
 module.exports = router;

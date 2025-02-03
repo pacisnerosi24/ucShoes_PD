@@ -10,6 +10,9 @@ load_dotenv()
 # Get the database URL from the environment variable
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+if not DATABASE_URL:
+    raise ValueError("❌ ERROR: DATABASE_URL is not set in .env file")
+
 # Create the SQLAlchemy engine using the database URL
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
@@ -19,5 +22,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Declare the base class for the models
 Base = declarative_base()
 
-# Creates all tables defined in the models, if they do not exist
-Base.metadata.create_all(bind=engine)
+# Ensure tables are created
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+init_db()

@@ -23,22 +23,26 @@ const router = express.Router();
  *                     type: integer
  *                     description: The unique ID of the product.
  *                     example: 1
- *                   name:
+ *                   productName:
  *                     type: string
  *                     description: The name of the product.
- *                     example: Running Shoes
+ *                     example: Nike Air Max
  *                   price:
  *                     type: number
  *                     description: The price of the product.
- *                     example: 79.99
+ *                     example: 120.99
  *                   description:
  *                     type: string
  *                     description: A brief description of the product.
- *                     example: High-quality running shoes for all terrains.
- *                   stock:
+ *                     example: High-quality running shoes
+ *                   productStatus:
  *                     type: integer
- *                     description: The number of items in stock.
- *                     example: 100
+ *                     description: The availability status of the product.
+ *                     example: 1
+ *                   categoryId:
+ *                     type: integer
+ *                     description: The category ID of the product.
+ *                     example: 2
  *       500:
  *         description: Server error.
  *         content:
@@ -48,7 +52,7 @@ const router = express.Router();
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Something went wrong
+ *                   example: Failed to fetch products
  */
 router.get('/', getAllProducts);
 

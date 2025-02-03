@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, send_from_directory
-import graphene
 from graphene import Schema
 from my_graphql_schema.resolvers import Query
 
@@ -31,4 +30,4 @@ def playground():
     return send_from_directory("static", "playground.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=3010)  # 🔥 Ahora corre en el puerto 3010
