@@ -1,12 +1,12 @@
-name: CI/CD for Product Services
+name: CI/CD for Product Create Service
 
 on:
   push:
     paths:
-      - 'Backend_uceShoes/productManagement/Products/**'
-    branches:  
-      - QA
-    
+      - 'Backend_uceShoes/productManagement/Products/productCreate/**'
+    branches:
+      - TestConectionProducts
+
 
 jobs:
   build:
@@ -21,18 +21,22 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build & Push Docker images
+      - name: Build & Push Docker image
         run: |
-          for service in productCreate productDelete productGetAll productGetById productUpdate; do
-            docker build Backend_uceShoes/productManagement/Products/$service/. \
-              --build-arg POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-              --build-arg POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
-              --build-arg POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-              --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-              --build-arg DB_NAME=${{ secrets.DB_NAME }} \
-              -t ${{ secrets.DOCKER_USERNAME }}/$service:latest
-            docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
-          done
+          docker build Backend_uceShoes/productManagement/Products/productCreate/. \
+            --build-arg POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+            --build-arg POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+            --build-arg POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+            --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+            --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+            --build-arg SERVER_PORT=${{ secrets.SERVER_PORT_CREATE_PRODUCT }} \
+            --build-arg AWS_ACCESS_KEY_ID_S3=${{ secrets.AWS_ACCESS_KEY_ID_S3 }} \
+            --build-arg AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }} \
+            --build-arg S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION_S3 }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/product-create:latest
+
+          docker push ${{ secrets.DOCKER_USERNAME }}/product-create:latest
 
   deploy:
     needs: build
@@ -45,20 +49,18 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            for service in productCreate productDelete productGetAll productGetById productUpdate; do
-              sudo docker stop $service || true
-              sudo docker rm $service || true
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/$service:latest
-              sudo docker run -d --name $service \
-                -p 3000:3000 \
-                -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-                -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
-                -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-                -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-                -e DB_NAME=${{ secrets.DB_NAME }} \
-                -e AWS_ACCESS_KEY_ID_S3=${{ secrets.AWS_ACCESS_KEY_ID_S3 }} \
-                -e AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }} \
-                -e AWS_REGION_S3=${{ secrets.AWS_REGION_S3 }} \
-                -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
-                ${{ secrets.DOCKER_USERNAME }}/$service:latest
-            done
+            sudo docker stop product-create || true
+            sudo docker rm product-create || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/product-create:latest
+            sudo docker run -d --name product-create \
+              -p ${{ secrets.SERVER_PORT_CREATE_PRODUCT }}:${{ secrets.SERVER_PORT_CREATE_PRODUCT }} \
+              -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+              -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+              -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+              -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e AWS_ACCESS_KEY_ID_S3=${{ secrets.AWS_ACCESS_KEY_ID_S3 }} \
+              -e AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }} \
+              -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
+              -e AWS_REGION=${{ secrets.AWS_REGION_S3 }} \
+              ${{ secrets.DOCKER_USERNAME }}/product-create:latest
