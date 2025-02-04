@@ -3,7 +3,7 @@ name: CI/CD for Product Create Service
 on:
   push:
     paths:
-      - 'Backend_uceShoes/productManagement/productCreate/Products/productCreate/**'
+      - 'Backend_uceShoes/productManagement/productCreation/Products/productCreate/**'
     branches:
       - TestConectionProducts
 
