@@ -51,7 +51,7 @@ const connectToDatabase = async () => {
   }
 };
 
-// Start server
+// Start server test 1
 app.listen(port, () => {
   connectToDatabase();
   console.log(`Server running on port ${port}`);
