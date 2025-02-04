@@ -17,7 +17,7 @@ sequelize.sync({ alter: true }).then(() => {
     console.log('✅ Table Categories synchronized');
   });
 
-// Swagger configuration hola
+// Swagger configuration  test 1
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',

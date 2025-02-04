@@ -3,7 +3,7 @@ name: CI/CD for Category Services
 on:
   push:
     paths:
-      - 'Backend_uceShoes/productManagement/Category/**'
+      - 'Backend_uceShoes/productManagement/productCreation/Category/**'
     branches:
       - TestConectionProducts  
 
