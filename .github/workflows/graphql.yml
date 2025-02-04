@@ -3,7 +3,7 @@ name: CI/CD for GraphQL Service
 on:
   push:
     paths:
-      - 'Backend_uceShoes/productSearchGraphQL/**'
+      - 'Backend_uceShoes/productManagement/productSearchGraphQL/**'
     branches:  
       - TestConectionProducts
 
