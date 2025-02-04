@@ -37,7 +37,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 const createProductRoute = require('./routes/createProductRoute');
 app.use('/api/products', createProductRoute);
 
-// Database connection
+// Database connection lala
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
