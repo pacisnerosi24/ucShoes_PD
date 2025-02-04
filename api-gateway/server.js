@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 8080; // API Gateway en el puerto 8080
 app.use(cors());
 app.use(express.json());
 
-// 📌 Definir los microservicios
+// 📌 Definir los microservicios test api
 const services = {
   createProduct: 'http://localhost:3000',
   getAllProducts: 'http://localhost:3004',
