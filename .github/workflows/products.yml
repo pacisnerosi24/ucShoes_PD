@@ -6,8 +6,6 @@ on:
       - 'Backend_uceShoes/productManagement/Products/productCreate/**'
     branches:
       - TestConectionProducts
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
