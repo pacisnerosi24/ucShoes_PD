@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // 📌 Definir los microservicios test api
+
 const services = {
   createProduct: 'http://localhost:3000',
   getAllProducts: 'http://localhost:3004',
