@@ -5,3 +5,5 @@ graphql-core
 mysql-connector-python
 python-dotenv
 SQLAlchemy
+pymysql
+cryptography
