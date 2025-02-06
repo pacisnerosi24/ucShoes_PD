@@ -15,7 +15,7 @@ app.use('/recovery',recoveryPass);
 sequelize.sync({ force: false }) 
   .then(() => {
     console.log('Tablas creadas o sincronizadas correctamente');
-    const PORT = process.env.PORT || 3003;
+    const PORT = process.env.PORT || 3012;
     app.listen(PORT, () => {
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
       console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
