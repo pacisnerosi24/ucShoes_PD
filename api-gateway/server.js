@@ -48,7 +48,7 @@ setupProxy('/api/categories/delete/:id', services.deleteCategory);
 
 setupProxy('/graphql', services.graphql);
 
-// 📌 Iniciar el API Gateway  test deploy apigateway 01
+// 📌 Iniciar el API Gateway  test deploy apigateway 02
 app.listen(PORT, () => {
   console.log(`🚀 API Gateway corriendo en http://localhost:${PORT}`);
 });
