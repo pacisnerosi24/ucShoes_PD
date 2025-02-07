@@ -5,7 +5,7 @@ on:
     paths:
       - 'api-gateway/**'
     branches:
-      - TestConectionProducts
+      - main
 
 jobs:
   build-and-deploy:
@@ -33,48 +33,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🚀 Deploy API Gateway to EC2
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.EC2_HOST_API_GATEWAY }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        port: 22
-        script: |
-          echo "🔍 Checking if Docker is installed..."
-          if ! command -v docker &> /dev/null; then
-            echo "📦 Installing Docker..."
-            sudo yum update -y
-            sudo yum install -y docker
-            sudo service docker start
-            sudo usermod -a -G docker ec2-user
-          fi
+      - name: 🚀 Deploy API Gateway to EC2
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST_API_GATEWAY }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "🔍 Checking if Docker is installed..."
+            if ! command -v docker &> /dev/null; then
+              echo "📦 Installing Docker..."
+              sudo yum update -y
+              sudo yum install -y docker
+              sudo systemctl start docker
+              sudo usermod -a -G docker $USER
+            fi
 
-          echo "🛑 Stopping previous container..."
-          sudo docker stop api-gateway || true
-          sudo docker rm api-gateway || true
+            echo "🛑 Stopping previous container..."
+            if sudo docker ps -q -f name=api-gateway; then
+              sudo docker stop api-gateway
+              sudo docker rm api-gateway
+            else
+              echo "⚠️ No previous container found."
+            fi
 
-          echo "🧹 Removing old Docker images..."
-          sudo docker image prune -af
+            echo "🧹 Removing old Docker images..."
+            sudo docker image prune -af || echo "No images to remove."
 
-          echo "📥 Pulling the latest Docker image..."
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
+            echo "📥 Pulling the latest Docker image..."
+            if [ -z "${{ secrets.DOCKER_USERNAME }}" ]; then
+              echo "❌ ERROR: DOCKER_USERNAME is empty."
+              exit 1
+            fi
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
 
-          echo "🚀 Running the new container..."
-          sudo docker run -d \
-            --name api-gateway \
-            -p ${{ secrets.SERVER_PORT_API_GATEWAY }}:${{ secrets.SERVER_PORT_API_GATEWAY }} \
-            -e SERVER_PORT=${{ secrets.SERVER_PORT_API_GATEWAY }} \
-            --restart=always \
-            ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
+            echo "🚀 Running the new container..."
+            if [ -z "${{ secrets.SERVER_PORT_API_GATEWAY }}" ]; then
+              echo "❌ ERROR: SERVER_PORT_API_GATEWAY is empty."
+              exit 1
+            fi
 
-          echo "🔍 Verifying deployment..."
-          if sudo docker ps -f name=api-gateway | grep api-gateway; then
-            echo "✅ Deployment successful: API Gateway is running."
-          else
-            echo "❌ Deployment failed: Check logs for errors."
-            exit 1
-          fi 
+            sudo docker run -d \
+              --name api-gateway \
+              -p ${{ secrets.SERVER_PORT_API_GATEWAY }}:${{ secrets.SERVER_PORT_API_GATEWAY }} \
+              -e SERVER_PORT=${{ secrets.SERVER_PORT_API_GATEWAY }} \
+              --restart=always \
+              ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
 
-    - name: 🔐 Log out of Docker Hub
-      run: docker logout
+            echo "🔍 Verifying deployment..."
+            if sudo docker ps -f name=api-gateway | grep api-gateway; then
+              echo "✅ Deployment successful: API Gateway is running."
+            else
+              echo "❌ Deployment failed: Check logs for errors."
+              exit 1
+            fi 
+
+      - name: 🔐 Log out of Docker Hub
+        run: docker logout
