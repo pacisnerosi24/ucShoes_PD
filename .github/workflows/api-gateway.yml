@@ -67,7 +67,7 @@ jobs:
               ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
 
             echo "🔍 Verifying deployment..."
-            if docker ps -f name=api-gateway | grep api-gateway; then
+            if sudo docker ps -f name=api-gateway | grep api-gateway; then
               echo "✅ Deployment successful: API Gateway is running."
             else
               echo "❌ Deployment failed: Check logs for errors."
