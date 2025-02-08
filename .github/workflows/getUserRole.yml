@@ -68,7 +68,6 @@ jobs:
             # 🚀 Ejecutar el nuevo contenedor con opción de reinicio automático
             # Se agregó `--restart unless-stopped` para que el contenedor no se detenga si falla.
             sudo docker run -d \
-              --restart unless-stopped \
               --name uceshoes-get-user-role \
               -p 3014:3014 \
               -e DB_HOST=${{ secrets.DB_HOST_P }} \
