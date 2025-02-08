@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+//test
+
 app.use('/get', getRole);
 
 sequelize.sync({ force: false }) 
