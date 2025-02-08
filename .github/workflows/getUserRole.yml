@@ -76,5 +76,6 @@ jobs:
               -e DB_NAME=${{ secrets.DB_NAME_P }} \
               -e DB_DIALECT=${{ secrets.DB_DIALECT_P }} \
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+              -e ORIGIN_FRONT=${{ secrets.ORIGIN_FRONT}}\
               -e SERVER_PORT_GET_USER_ROLE=${{ secrets.SERVER_PORT_GET_USER_ROLE }} \
               ${{ secrets.DOCKER_USERNAME_P }}/uceshoes-get-user-role:latest
