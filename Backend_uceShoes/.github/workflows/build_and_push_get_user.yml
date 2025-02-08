@@ -1,0 +1,45 @@
+name: Build and Push Docker Image get user role # Nombre del workflow
+
+on:
+  push:
+    branches:
+      - TestConectionUser  # Se ejecutará solo cuando haya un push en la rama "QA"
+
+jobs:
+  build-and-push:
+    name: Build Docker Image and Push to Docker Hub  # Nombre del job
+    runs-on: ubuntu-latest  # Se ejecutará en un entorno de Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Obtiene el código fuente del repositorio de GitHub
+
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD_P }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME_P }}" --password-stdin
+          # Inicia sesión en Docker Hub usando usuario y contraseña almacenados en Secrets
+
+      - name: Pull latest image (if exists)
+        continue-on-error: true
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME_P }}/get_user_roles:latest || true
+          # Intenta descargar la imagen actual desde Docker Hub (si no existe, sigue sin error)
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME_P }}/get_user_roles:latest ./Authentication_and_Authorization/get_user_roles
+          # Construye la imagen Docker desde el Dockerfile dentro de la carpeta "get_user_roles"
+
+      - name: Compare digest and push if different
+        run: |
+          LOCAL_DIGEST=$(docker inspect --format='{{index .Id}}' ${{ secrets.DOCKERHUB_USERNAME_P }}/get_user_roles:latest)
+          REMOTE_DIGEST=$(docker inspect --format='{{index .Id}}' $(docker images --quiet ${{ secrets.DOCKERHUB_USERNAME_P }}/get_user_roles:latest))
+          
+          if [ "$LOCAL_DIGEST" != "$REMOTE_DIGEST" ]; then
+            echo "Nueva versión detectada, subiendo a Docker Hub..."
+            docker push ${{ secrets.DOCKERHUB_USERNAME_P }}/get_user_roles:latest
+            # Si la imagen local y la remota son diferentes, sube la nueva imagen a Docker Hub
+          else
+            echo "No hay cambios en la imagen, omitiendo push."
+            # Si la imagen local y la remota son iguales, no sube la imagen para evitar sobreescribir sin cambios
+          fi
