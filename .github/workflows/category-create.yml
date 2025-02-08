@@ -68,6 +68,7 @@ jobs:
             sudo docker run -d \
               --name category-create \
               -p ${{ secrets.SERVER_PORT_CREATE_CATEGORY }}:${{ secrets.SERVER_PORT_CREATE_CATEGORY }} \
+              -e PORT=${{ secrets.SERVER_PORT_CREATE_CATEGORY }} \
               -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
               -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
