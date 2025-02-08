@@ -1,4 +1,4 @@
-name: Deploy Category Create Service to AWS
+name: 🚀 Deploy Category Create Service to AWS
 
 on:
   push:
@@ -36,10 +36,10 @@ jobs:
     needs: build-and-deploy
 
     steps:
-      - name: 🚀 Connect to EC2 and Deploy Product Create Service
+      - name: 🚀 Connect to EC2 and Deploy Category Create Service
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST_PRODUCT_CREATE }}
+          host: ${{ secrets.EC2_HOST_CREATE_CATEGORY }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
@@ -54,9 +54,9 @@ jobs:
             fi
 
             echo "🛑 Stopping and removing previous container..."
-            if sudo docker ps -q -f name=product-create; then
-              sudo docker stop product-create
-              sudo docker rm product-create
+            if sudo docker ps -q -f name=category-create; then
+              sudo docker stop category-create
+              sudo docker rm category-create
             else
               echo "⚠️ No running container found."
             fi
@@ -65,24 +65,27 @@ jobs:
             sudo docker image prune -af || echo "⚠️ No images to remove."
 
             echo "📥 Pulling the latest Docker image..."
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/product-create:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
             echo "🚀 Running the new container..."
             sudo docker run -d \
-              --name product-create \
-              -p ${{ secrets.SERVER_PORT_CREATE_PRODUCT }}:${{ secrets.SERVER_PORT_CREATE_PRODUCT }} \
+              --name category-create \
+              -p ${{ secrets.SERVER_PORT_CREATE_CATEGORY }}:${{ secrets.SERVER_PORT_CREATE_CATEGORY }} \
               -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
               -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
               -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
               -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
               --restart always \
-              ${{ secrets.DOCKER_USERNAME }}/product-create:latest
+              ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
             echo "🔍 Verifying deployment..."
-            if sudo docker ps -q -f name=product-create; then
-              echo "✅ Deployment successful: Product Create Service is running."
+            if sudo docker ps -q -f name=category-create; then
+              echo "✅ Deployment successful: Category Create Service is running."
             else
               echo "❌ Deployment failed: Check logs for errors."
               exit 1
-            fi
+            fi 
+
+      - name: 🔐 Log out of Docker Hub
+        run: docker logout
