@@ -7,6 +7,17 @@ const recoveryPass = require('./routes/RecoveyPasswordRoute');
 
 const app = express();
 
+if (!process.env.ORIGIN_FRONT) {
+  console.error("Error: no esta definida la variable de entorno del frontend.");
+  process.exit(1);
+}
+
+app.use(cors({
+  origin: process.env.ORIGIN_FRONT,
+  methods: "POST",
+  allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(bodyParser.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -15,7 +26,7 @@ app.use('/recovery',recoveryPass);
 sequelize.sync({ force: false }) 
   .then(() => {
     console.log('Tablas creadas o sincronizadas correctamente');
-    const PORT = process.env.PORT || 3012;
+    const PORT = process.env.SERVER_PORT_RECOVERY_PASSWORD || 3012;
     app.listen(PORT, () => {
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
       console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);

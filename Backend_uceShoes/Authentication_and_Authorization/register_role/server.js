@@ -7,22 +7,29 @@ const swaggerDocs = require('./config/swagger');
 
 const app = express();
 
-// Middlewares
+if (!process.env.ORIGIN_FRONT) {
+  console.error("Error: no esta definida la variable de entorno del frontend.");
+  process.exit(1);
+}
+
+app.use(cors({
+  origin: process.env.ORIGIN_FRONT,
+  methods: "POST",
+  allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(bodyParser.json());
 
-// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Routes
 app.use('/register', roleRoutes);
 
-// Database synchronization and server start
 const startServer = async () => {
   try {
     await sequelize.sync({ force: false });
     console.log('Database synchronized successfully');
 
-    const PORT = process.env.PORT || 3013;
+    const PORT = process.env.SERVER_PORT_REGISTER_ROLE || 3013;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Swagger Docs available at http://localhost:${PORT}/api-docs`);
