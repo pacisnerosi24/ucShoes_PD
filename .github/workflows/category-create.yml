@@ -54,15 +54,11 @@ jobs:
             fi
 
             echo "🛑 Stopping and removing previous container..."
-            if sudo docker ps -q -f name=category-create; then
               sudo docker stop category-create
               sudo docker rm category-create
-            else
-              echo "⚠️ No running container found."
-            fi
 
             echo "🧹 Removing old Docker images..."
-            sudo docker image prune -af || echo "⚠️ No images to remove."
+            sudo docker image prune -af 
 
             echo "📥 Pulling the latest Docker image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/category-create:latest
@@ -80,12 +76,9 @@ jobs:
               ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
             echo "🔍 Verifying deployment..."
-            if sudo docker ps -q -f name=category-create; then
+            if sudo docker ps -q -f name=category-create | grep product-create; then
               echo "✅ Deployment successful: Category Create Service is running."
             else
               echo "❌ Deployment failed: Check logs for errors."
               exit 1
             fi 
-
-      - name: 🔐 Log out of Docker Hub
-        run: docker logout
