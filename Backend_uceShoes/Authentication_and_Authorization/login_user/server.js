@@ -19,6 +19,8 @@ app.use(cors({
   allowedHeaders: "Content-Type,Authorization"
 }));
 
+//test
+
 app.use(bodyParser.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
