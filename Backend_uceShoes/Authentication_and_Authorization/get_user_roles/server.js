@@ -27,7 +27,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/get', getRole);
 
-//test
 
 sequelize.sync({ force: false }) 
   .then(() => {
