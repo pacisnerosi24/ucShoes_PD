@@ -26,7 +26,7 @@ jobs:
       - name: 📦 Build and push Docker image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME_P }}/category-create:latest \
-            -f Backend_uceShoes/productManagement/productCreation/Category/createCategory/Dockerfile \
-            Backend_uceShoes/productManagement/productCreation/Category/createCategory
+            -f Backend_uceShoes/Authentication_and_Authorization/get_user_roles/Dockerfile \
+            Backend_uceShoes/Authentication_and_Authorization/get_user_roles
 
-          docker push ${{ secrets.DOCKER_USERNAME_P }}/category-create:latest
+          docker push ${{ secrets.DOCKER_USERNAME_P }}/get-user-role:latest
