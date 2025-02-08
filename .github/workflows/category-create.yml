@@ -76,7 +76,7 @@ jobs:
               ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
             echo "🔍 Verifying deployment..."
-            if sudo docker ps -q -f name=category-create | grep product-create; then
+            if sudo docker ps -q -f name=category-create | grep category-create; then
               echo "✅ Deployment successful: Category Create Service is running."
             else
               echo "❌ Deployment failed: Check logs for errors."
