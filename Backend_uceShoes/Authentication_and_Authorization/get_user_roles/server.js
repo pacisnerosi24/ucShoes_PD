@@ -8,8 +8,13 @@ const cors = require('cors');
 
 const app = express();
 
+if (!process.env.ORIGIN_FRONT) {
+  console.error("Error: no esta definida la variable de entorno del frontend.");
+  process.exit(1);
+}
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN_FRONT,
   methods: "GET",
   allowedHeaders: "Content-Type,Authorization"
 }));
@@ -25,7 +30,7 @@ app.use('/get', getRole);
 sequelize.sync({ force: false }) 
   .then(() => {
     console.log('Tablas creadas o sincronizadas correctamente');
-    const PORT = process.env.PORT || 3014;
+    const PORT = process.env.SERVER_PORT_GET_USER_ROLE || 3014;
     app.listen(PORT, () => {
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
       console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
