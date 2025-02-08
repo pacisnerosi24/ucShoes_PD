@@ -54,8 +54,8 @@ jobs:
             fi
 
             echo "🛑 Stopping and removing previous container..."
-              sudo docker stop category-create
-              sudo docker rm category-create
+              sudo docker stop category-create || true
+              sudo docker rm category-create || true
 
             echo "🧹 Removing old Docker images..."
             sudo docker image prune -af 
