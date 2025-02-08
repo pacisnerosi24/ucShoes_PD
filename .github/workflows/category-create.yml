@@ -74,7 +74,7 @@ jobs:
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
               -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
               -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-              -e DB_DIALECT=postgres \ # 🔥 Asegurar que el dialecto está definido
+              -e DB_DIALECT=postgres \
               --restart always \
               ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
