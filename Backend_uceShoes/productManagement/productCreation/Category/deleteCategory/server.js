@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Swagger configuration tets 01 delete category 
+// Swagger configuration tets 02 delete category 
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
