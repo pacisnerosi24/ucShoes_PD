@@ -1,64 +1,84 @@
-name: CI/CD for Category Create Service
+name: Deploy Category Create Service to AWS
 
 on:
   push:
     paths:
       - 'Backend_uceShoes/productManagement/productCreation/Category/createCategory/**'
     branches:
-      - main
+      - TestConectionProducts
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🛠️ Checkout code
-        uses: actions/checkout@v3
+      - name: 🛠️ Checkout del repositorio
+        uses: actions/checkout@v4
 
-      - name: 🔐 Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: 🔧 Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: 📦 Build & Push Docker image
+      - name: 🔐 Iniciar sesión en Docker Hub
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/category-create:latest Backend_uceShoes/productManagement/productCreation/Category/createCategory \
-            --build-arg POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
-            --build-arg POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
-            --build-arg POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-            --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-            --build-arg DB_NAME=${{ secrets.DB_NAME }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: 📦 Construir y subir imagen Docker
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/category-create:latest \
+            -f Backend_uceShoes/productManagement/productCreation/Category/createCategory/Dockerfile \
+            Backend_uceShoes/productManagement/productCreation/Category/createCategory
 
           docker push ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
   deploy:
-    needs: build
+    name: Deploy to EC2
     runs-on: ubuntu-latest
+    needs: build-and-deploy
+
     steps:
-      - name: 🚀 Deploy to AWS EC2
-        uses: appleboy/ssh-action@v0.1.8
+      - name: 🚀 Connect to EC2 and Deploy Category Create Service
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST_CATEGORIES }}
+          host: ${{ secrets.EC2_HOST_CREATE_CATEGORY }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
-            echo "🔄 Stopping previous container if it exists..."
+            echo "🔍 Checking if Docker is installed..."
+            if ! command -v docker &> /dev/null; then
+              echo "📦 Installing Docker..."
+              sudo yum update -y
+              sudo yum install -y docker
+              sudo service docker start
+              sudo usermod -a -G docker $USER
+            fi
+
+            echo "🛑 Stopping and removing previous container..."
             sudo docker stop category-create || true
             sudo docker rm category-create || true
 
-            echo "🧹 Cleaning up old Docker images..."
+            echo "🧹 Removing old Docker images..."
             sudo docker image prune -af
 
-            echo "📥 Pulling the latest image from Docker Hub..."
+            echo "📥 Pulling the latest Docker image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
             echo "🚀 Running the new container..."
-            sudo docker run -d --name category-create \
-              --restart=always \
+            sudo docker run -d \
+              --name category-create \
               -p ${{ secrets.SERVER_PORT_CREATE_CATEGORY }}:${{ secrets.SERVER_PORT_CREATE_CATEGORY }} \
               -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
               -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
               -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
               -e DB_NAME=${{ secrets.DB_NAME }} \
+              --restart always \
               ${{ secrets.DOCKER_USERNAME }}/category-create:latest
+
+            echo "🔍 Verifying deployment..."
+            if sudo docker ps -f name=category-create | grep category-create; then
+              echo "✅ Deployment successful: Category Create Service is running."
+            else
+              echo "❌ Deployment failed: Check logs for errors."
+              exit 1
+            fi 
