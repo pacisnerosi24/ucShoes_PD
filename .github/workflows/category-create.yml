@@ -59,7 +59,7 @@ jobs:
             sudo docker rm category-create || true
 
             echo "🧹 Removing old Docker images..."
-            sudo docker image prune -af || echo "⚠️ No images to remove."
+            sudo docker image prune -af
 
             echo "📥 Pulling the latest Docker image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/category-create:latest
@@ -76,9 +76,6 @@ jobs:
               --restart always \
               ${{ secrets.DOCKER_USERNAME }}/category-create:latest
 
-            echo "⏳ Waiting for the service to start..."
-            sleep 10
-
             echo "🔍 Verifying deployment..."
             if sudo docker ps -q -f name=category-create | grep category-create; then
               echo "✅ Deployment successful: Category Create Service is running."
@@ -87,6 +84,3 @@ jobs:
               sudo docker logs category-create
               exit 1
             fi
-
-      - name: 🔐 Log out of Docker Hub
-        run: docker logout
