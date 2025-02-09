@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const sequelize = require('./config/Database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
-const recoveryPass = require('./routes/RecoveyPasswordRoute');
+const getRole = require('./routes/getUserRolesRoutes');
+const cors = require('cors');
 
 const app = express();
 
@@ -15,20 +15,24 @@ if (!process.env.ORIGIN_FRONT) {
 
 app.use(cors({
   origin: process.env.ORIGIN_FRONT,
-  methods: "POST",
+  methods: "GET",
   allowedHeaders: "Content-Type,Authorization"
 }));
 
+//
+
 app.use(bodyParser.json());
-//test
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/recovery',recoveryPass);
+
+
+app.use('/get', getRole);
+
 
 sequelize.sync({ force: false }) 
   .then(() => {
     console.log('Tablas creadas o sincronizadas correctamente');
-    const PORT = process.env.SERVER_PORT_RECOVERY_PASSWORD || 3012;
+    const PORT = process.env.SERVER_PORT_GET_USER_ROLE || 3015;
     app.listen(PORT, () => {
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
       console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);

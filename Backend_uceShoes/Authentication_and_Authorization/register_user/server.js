@@ -8,8 +8,13 @@ const cors = require('cors');
 
 const app = express();
 
+if (!process.env.ORIGIN_FRONT) {
+    console.error("Error: no esta definida la variable de entorno del frontend.");
+    process.exit(1);
+  }  
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN_FRONT,
   methods: "POST",
   allowedHeaders: "Content-Type"
 }));
@@ -23,7 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Tablas creadas o sincronizadas correctamente');
-        const PORT = process.env.PORT || 3001;
+        const PORT = process.env.SERVER_PORT_REGISTER_USER || 3015;
         app.listen(PORT, () => {
             console.log(`Servidor ejecutándose en el puerto ${PORT}`);
             console.log(`Swagger Docs available at http://localhost:${PORT}/api-docs`);
