@@ -7,7 +7,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware
+// Middleware test 01 getbyid product 
 app.use(cors());
 app.use(express.json());
 

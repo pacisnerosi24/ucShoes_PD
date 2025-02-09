@@ -1,0 +1,65 @@
+name: CI/CD for Category GetById Service
+
+on:
+  push:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Category/getCategoryById/**'
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔐 Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 📦 Build & Push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/category-getbyid:latest Backend_uceShoes/productManagement/productCreation/Category/getCategoryById \
+            --build-arg POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+            --build-arg POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+            --build-arg POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+            --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+            --build-arg DB_NAME=${{ secrets.DB_NAME }}
+
+          docker push ${{ secrets.DOCKER_USERNAME }}/category-getbyid:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚀 Deploy to AWS EC2
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST_CATEGORIES }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🔄 Stopping previous container if it exists..."
+            sudo docker stop category-getbyid || true
+            sudo docker rm category-getbyid || true
+
+            echo "🧹 Cleaning up old Docker images..."
+            sudo docker image prune -af
+
+            echo "📥 Pulling the latest image from Docker Hub..."
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/category-getbyid:latest
+
+            echo "🚀 Running the new container..."
+            sudo docker run -d --name category-getbyid \
+              --restart=always \
+              -p ${{ secrets.SERVER_PORT_GET_CATEGORY_BY_ID }}:${{ secrets.SERVER_PORT_GET_CATEGORY_BY_ID }} \
+              -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+              -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} \
+              -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+              -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              ${{ secrets.DOCKER_USERNAME }}/category-getbyid:latest
+              

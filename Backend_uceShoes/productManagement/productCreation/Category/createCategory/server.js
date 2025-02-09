@@ -8,7 +8,7 @@ const  sequelize  = require('./config/database');
 const Category = require('./models/Category');
 const PORT = process.env.PORT || 3005;
 
-// Middleware
+// Middleware test 13 creation category 
 app.use(cors());
 app.use(express.json());
 
@@ -17,7 +17,7 @@ sequelize.sync({ alter: true }).then(() => {
     console.log('✅ Table Categories synchronized');
   });
 
-// Swagger configuration
+// Swagger configuration  test category 
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
