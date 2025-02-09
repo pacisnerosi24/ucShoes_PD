@@ -28,7 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Tablas creadas o sincronizadas correctamente');
-        const PORT = process.env.SERVER_PORT_REGISTER_USER || 3014;
+        const PORT = process.env.SERVER_PORT_REGISTER_USER || 3015;
         app.listen(PORT, () => {
             console.log(`Servidor ejecutándose en el puerto ${PORT}`);
             console.log(`Swagger Docs available at http://localhost:${PORT}/api-docs`);
