@@ -24,6 +24,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/register', roleRoutes);
 
+//test
+
 const startServer = async () => {
   try {
     await sequelize.sync({ force: false });
