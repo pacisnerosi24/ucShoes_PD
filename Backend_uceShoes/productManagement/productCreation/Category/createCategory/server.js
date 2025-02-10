@@ -17,7 +17,7 @@ sequelize.sync({ alter: true }).then(() => {
     console.log('✅ Table Categories synchronized');
   });
 
-// Swagger configuration  test category 
+// Swagger configuration  test category creation Deploy 01
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
