@@ -51,7 +51,7 @@ const connectToDatabase = async () => {
   }
 };
 
-// Start server test 01
+// Start server conectionAWS 01
 app.listen(port, () => {
   connectToDatabase();
   console.log(`Server running on port ${port}`);
