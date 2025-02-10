@@ -40,7 +40,7 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post("http://localhost:3002/protected/login", {
+        const response = await api.post("/login", {
           email: this.email,
           password: this.password
         });

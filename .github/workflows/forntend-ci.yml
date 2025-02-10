@@ -1,0 +1,87 @@
+name: 🚀 Deploy Frontend UcShoes
+
+on:
+  push:
+    branches: [ "firstviews" ]
+  pull_request:
+    branches: [ "QA", "main" ]
+
+jobs:
+  build-and-push:
+    name: 🏗️ Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🛠️ Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🔢 Extract Version from Git
+      id: vars
+      run: |
+        echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "version_tag=$(date +'%Y%m%d')-${{ github.run_number }}" >> $GITHUB_ENV
+
+    - name: 🔐 Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME_FRONT }}
+        password: ${{ secrets.DOCKER_PASSWORD_FRONT }}
+
+    - name: 📦 Build and Push Docker Image
+      run: |
+        docker build . \
+          --build-arg PORT=5000 \
+          --build-arg API_GATEWAY_HOST=${{ secrets.EC2_HOST_API_GATEWAY }} \
+          --build-arg API_GATEWAY_PORT=${{ secrets.SERVER_PORT_API_GATEWAY }} \
+          --build-arg AUTH_HOST=${{ secrets.EC2_HOST_LOGIN_USER }} \
+          --build-arg AUTH_PORT=${{ secrets.SERVER_PORT_LOGIN_USER }} \
+          --build-arg RECOVERY_HOST=${{ secrets.EC2_HOST_PASSWORD_RECOVERY }} \
+          --build-arg RECOVERY_PORT=${{ secrets.SERVER_PORT_RECOVERY_PASSWORD }} \
+          --file Dockerfile \
+          --tag ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:${{ env.version_tag }} \
+          --tag ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:latest 
+
+        docker push ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:${{ env.version_tag }}
+        docker push ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:latest
+
+  deploy:
+    name: 🚀 Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+    - name: 🖥️ Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.EC2_HOST_FRONT }}
+        username: ${{ secrets.EC2_USER_FRONT }}
+        key: ${{ secrets.EC2_SSH_KEY_FRONT }}
+        port: 22
+        script: |
+          echo "🔍 Checking if Docker is installed..."
+          if ! command -v docker &> /dev/null; then
+            echo "📦 Docker is not installed. Installing..."
+            sudo yum update -y
+            sudo yum install -y docker
+            sudo service docker start
+            sudo usermod -a -G docker ec2-user
+          else
+            echo "✅ Docker is already installed."
+          fi
+
+          echo "📥 Pulling latest Docker image..."
+          sudo docker pull ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:latest
+
+          echo "🛑 Stopping and removing old container..."
+          sudo docker ps -q --filter "name=frontend-uceshoes" | grep -q . && \
+          sudo docker stop frontend-uceshoes && sudo docker rm frontend-uceshoes || true
+
+          echo "🚀 Running new container with environment variables..."
+          sudo docker run -d --name frontend-uceshoes -p 80:5000 \
+            -e VITE_API_API_GATEWAY_HOST=${{ secrets.EC2_HOST_API_GATEWAY }} \
+            -e VITE_API_API_GATEWAY_PORT=${{ secrets.SERVER_PORT_API_GATEWAY }} \
+            -e VITE_API_HOST_AUTH_HOST=${{ secrets.EC2_HOST_LOGIN_USER }} \
+            -e VITE_API_HOST_AUTH_PORT=${{ secrets.SERVER_PORT_LOGIN_USER }} \
+            -e VITE_API_HOST_RECOVERY_HOST=${{ secrets.EC2_HOST_PASSWORD_RECOVERY }} \
+            -e VITE_API_HOST_RECOVERY_PORT=${{ secrets.SERVER_PORT_RECOVERY_PASSWORD }} \
+            ${{ secrets.DOCKER_USERNAME_FRONT }}/frontend-uceshoes:latest

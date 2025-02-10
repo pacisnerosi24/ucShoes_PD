@@ -19,7 +19,8 @@
   </template>
   
   <script>
-  import axios from 'axios';
+
+import { recovery } from '../utils/api';
   
   export default {
     data() {
@@ -30,7 +31,7 @@
     methods: {
       async resetPassword() {
         // Enviar datos al backend sin esperar respuesta
-        axios.post("http://localhost:3012/recovery/forgot", { email: this.email })
+        recovery.post("/forgot", { email: this.email })
           .catch(error => {
             console.error("Error al enviar la solicitud:", error);
           });

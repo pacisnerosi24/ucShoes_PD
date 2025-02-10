@@ -21,7 +21,8 @@
   </template>
   
   <script>
-  import axios from 'axios';
+
+import { recovery } from '../utils/api';
   
   export default {
     data() {
@@ -35,7 +36,7 @@
     methods: {
       async resetPassword() {
         // Enviar los datos al backend sin verificar nada
-        axios.post("http://localhost:3012/recovery/reset", {
+        recovery.post("/reset", {
           email: this.email,
           code: this.code,
           newPassword: this.password

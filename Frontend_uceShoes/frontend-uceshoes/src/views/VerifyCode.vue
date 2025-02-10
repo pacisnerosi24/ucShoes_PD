@@ -16,7 +16,7 @@
   </template>
   
   <script>
-  import axios from 'axios';
+import { recovery } from '../utils/api';
   
   export default {
     data() {
@@ -28,7 +28,7 @@
     methods: {
       async verifyCode() {
         // Enviar los datos al backend sin esperar respuesta
-        axios.post("http://localhost:3012/recovery/verify", {
+        recovery.post("/verify", {
           email: this.email,
           code: this.code
         }).catch(error => {
