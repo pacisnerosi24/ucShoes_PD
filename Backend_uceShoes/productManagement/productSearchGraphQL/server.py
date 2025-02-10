@@ -30,4 +30,4 @@ def playground():
     return send_from_directory("static", "playground.html")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3010)  # 🔥 Ahora corre en el puerto 3010
+    app.run(debug=True, port=3010)  # 🔥 deploy GrahQL test01
