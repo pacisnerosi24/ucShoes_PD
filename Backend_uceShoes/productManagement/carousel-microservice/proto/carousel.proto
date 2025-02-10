@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package carousel;
+
+service CarouselService {
+  // Devuelve la lista de imágenes del carrusel
+  rpc GetCarouselImages (EmptyRequest) returns (CarouselImageListResponse);
+
+  // Devuelve los productos en oferta al hacer clic en una imagen
+  rpc GetDiscountedProducts (ImageIdRequest) returns (ProductListResponse);
+}
+
+message EmptyRequest {}
+
+message ImageIdRequest {
+  string id = 1;
+}
+
+message CarouselImage {
+  string id = 1;
+  string image_url = 2;
+  string title = 3;
+}
+
+message CarouselImageListResponse {
+  repeated CarouselImage images = 1;
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string image_url = 3;
+  float price = 4;
+  float discount = 5;
+}
+
+message ProductListResponse {
+  repeated Product products = 1;
+}
