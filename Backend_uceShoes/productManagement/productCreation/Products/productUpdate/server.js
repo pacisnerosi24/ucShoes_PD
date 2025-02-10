@@ -35,7 +35,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.use('/api/products', updateProductRoute);
 
-// Database connection test update 01
+// Database connection AWSdeploy update products 01
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Database connected successfully');
