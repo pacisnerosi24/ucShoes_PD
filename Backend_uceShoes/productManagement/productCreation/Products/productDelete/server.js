@@ -47,7 +47,7 @@ sequelize
     console.error('❌ Unable to connect to the database:', error);
   });
 
-// Start the server test 01 delete product
+// Start the server DeployAWS delete product 01
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📄 Swagger docs available at http://localhost:${PORT}/api-docs`);
