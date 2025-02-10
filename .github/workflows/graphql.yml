@@ -1,65 +1,98 @@
-name: CI/CD for GraphQL Service
+name: 🚀 Deploy GraphQL Service to AWS
 
 on:
   push:
     paths:
       - 'Backend_uceShoes/productManagement/productSearchGraphQL/**'
     branches:
-      - TestConectionProducts
+      - main
 
 jobs:
-  build:
+  build-and-push:
+    name: 📦 Build and Push Docker Image
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🛠️ Checkout code
-        uses: actions/checkout@v3
+      - name: 🛠️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: 🔐 Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: 📦 Build & Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/graphql:latest Backend_uceShoes/productManagement/productSearchGraphQL \
-            --build-arg DB_HOST=${{ secrets.DB_HOST }} \
-            --build-arg DB_PORT=${{ secrets.DB_PORT }} \
-            --build-arg DB_USER=${{ secrets.DB_USER }} \
-            --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            --build-arg DB_NAME=${{ secrets.DB_NAME }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: 📦 Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/graphql:latest \
+            -f Backend_uceShoes/productManagement/productSearchGraphQL/Dockerfile \
+            Backend_uceShoes/productManagement/productSearchGraphQL
 
           docker push ${{ secrets.DOCKER_USERNAME }}/graphql:latest
 
   deploy:
-    needs: build
+    name: 🚀 Deploy to EC2
     runs-on: ubuntu-latest
+    needs: build-and-push
+
     steps:
-      - name: 🚀 Deploy to AWS EC2
-        uses: appleboy/ssh-action@v0.1.8
+      - name: 🚀 Connect to EC2 and Deploy GraphQL Service
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST_GRAPHQL }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
           script: |
-            echo "🔄 Stopping previous container if it exists..."
+            echo "🔍 Checking if Docker is installed..."
+            if ! command -v docker &> /dev/null; then
+              echo "📦 Installing Docker..."
+              sudo yum update -y
+              sudo yum install -y docker
+              sudo systemctl start docker
+              sudo usermod -a -G docker $USER
+            fi
+
+            echo "🔍 Checking if netcat (nc) is installed..."
+            if ! command -v nc &> /dev/null; then
+              echo "📦 Installing netcat..."
+              sudo yum install -y nc
+            fi
+
+            echo "🛑 Stopping and removing previous container..."
             sudo docker stop graphql || true
             sudo docker rm graphql || true
 
-            echo "🧹 Cleaning up old Docker images..."
+            echo "🧹 Removing old Docker images..."
             sudo docker image prune -af
 
-            echo "📥 Pulling the latest image from Docker Hub..."
+            echo "📥 Pulling the latest Docker image..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/graphql:latest
 
+            echo "🔍 Checking if MySQL is reachable..."
+            if ! nc -zv ${{ secrets.DB_HOST }} ${{ secrets.DB_PORT }}; then
+              echo "❌ MySQL is not reachable. Deployment aborted."
+              exit 1
+            fi
+
             echo "🚀 Running the new container..."
-            sudo docker run -d --name graphql \
+            sudo docker run -d \
+              --name graphql \
               --restart=always \
               -p ${{ secrets.SERVER_PORT_GRAPHQL }}:${{ secrets.SERVER_PORT_GRAPHQL }} \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DB_USER=${{ secrets.DB_USER }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e DATABASE_URL="mysql+pymysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
+              -e GRAPHQL_PORT=${{ secrets.SERVER_PORT_GRAPHQL }} \
               ${{ secrets.DOCKER_USERNAME }}/graphql:latest
-              
+
+            echo "🔍 Verifying deployment..."
+            sleep 5
+            if [ "$(sudo docker ps -q -f name=graphql)" ]; then
+              echo "✅ Deployment successful: GraphQL Service is running."
+            else
+              echo "❌ Deployment failed: Checking logs..."
+              sudo docker logs graphql
+              echo "⚠️ Checking Docker container status..."
+              sudo docker ps -a
+              exit 1
+            fi
