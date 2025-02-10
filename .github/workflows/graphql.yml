@@ -5,7 +5,7 @@ on:
     paths:
       - 'Backend_uceShoes/productManagement/productSearchGraphQL/**'
     branches:
-      - main
+      - TestConectionProducts
 
 jobs:
   build:
