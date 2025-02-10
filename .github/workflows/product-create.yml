@@ -6,6 +6,11 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Products/productCreate/**'
     branches:
       - TestConectionProducts
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Products/productCreate/**'
+    branches: [ "QA", "main" ]
+
 
 jobs:
   build-and-deploy:

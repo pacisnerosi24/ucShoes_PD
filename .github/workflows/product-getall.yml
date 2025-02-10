@@ -6,7 +6,11 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Products/productGetAll/**'
     branches:
       - TestConectionProducts
-
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Products/productGetAll/**'
+    branches: [ "QA", "main" ]
+    
 jobs:
   build-and-deploy:
     name: Build and Push Docker Image

@@ -6,6 +6,10 @@ on:
       - 'api-gateway/**'
     branches:
       - TestConectionProducts
+  pull_request:
+    paths:
+      - 'api-gateway/**'
+    branches: [ "QA", "main" ]
 
 jobs:
   build-and-deploy:

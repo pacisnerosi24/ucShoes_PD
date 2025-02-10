@@ -6,7 +6,11 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Category/getCategoryById/**'
     branches:
       - main
-
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Category/getCategoryById/**'
+    branches: [ "QA", "main" ]
+    
 jobs:
   build:
     runs-on: ubuntu-latest

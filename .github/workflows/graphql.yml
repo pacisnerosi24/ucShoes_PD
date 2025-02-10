@@ -5,7 +5,11 @@ on:
     paths:
       - 'Backend_uceShoes/productManagement/productSearchGraphQL/**'
     branches:
-      - main
+      - test
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productSearchGraphQL/**'
+    branches: [ "QA", "main" ]
 
 jobs:
   build:

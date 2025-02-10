@@ -6,6 +6,10 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Category/updateCategory/**'
     branches:
       - main
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Category/updateCategory/**'
+    branches: [ "QA", "main" ]
 
 jobs:
   build:

@@ -6,7 +6,10 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Category/deleteCategory/**'
     branches:
       - TestConectionProducts
-
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Category/deleteCategory/**'
+    branches: [ "QA", "main" ]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

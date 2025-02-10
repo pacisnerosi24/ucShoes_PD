@@ -6,6 +6,10 @@ on:
       - 'Backend_uceShoes/productManagement/productCreation/Category/createCategory/**'
     branches:
       - TestConectionProducts
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/productManagement/productCreation/Category/createCategory/**'
+    branches: [ "QA", "main" ]
 
 jobs:
   build-and-deploy:

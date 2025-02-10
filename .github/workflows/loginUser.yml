@@ -6,6 +6,10 @@ on:
       - 'Backend_uceShoes/Authentication_and_Authorization/login_user/**'
     branches:
       - TestConectionUser
+  pull_request:
+    paths:
+      - 'Backend_uceShoes/Authentication_and_Authorization/login_user/**'
+    branches: [ "QA", "main" ]
 
 jobs:
   build-and-deploy:

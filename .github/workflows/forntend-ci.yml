@@ -2,8 +2,12 @@ name: 🚀 Deploy Frontend UcShoes
 
 on:
   push:
-    branches: [ "firstviews" ]
+    paths:
+      - 'Frontend_uceShoes/frontend-uceshoes/**'
+    branches: [ "test" ]
   pull_request:
+    paths:
+      - 'Frontend_uceShoes/frontend-uceshoes/**'
     branches: [ "QA", "main" ]
 
 jobs:
