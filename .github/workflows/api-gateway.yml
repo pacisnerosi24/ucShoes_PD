@@ -63,6 +63,28 @@ jobs:
               --name api-gateway \
               -p ${{ secrets.SERVER_PORT_API_GATEWAY }}:${{ secrets.SERVER_PORT_API_GATEWAY }} \
               -e PORT=${{ secrets.SERVER_PORT_API_GATEWAY }} \
+              -e EC2_HOST_PRODUCT_CREATE=${{ secrets.EC2_HOST_PRODUCT_CREATE }} \
+              -e SERVER_PORT_CREATE_PRODUCT=${{ secrets.SERVER_PORT_CREATE_PRODUCT }} \
+              -e EC2_HOST_PRODUCT_DELETE=${{ secrets.EC2_HOST_PRODUCT_DELETE }} \
+              -e SERVER_PORT_DELETE_PRODUCT=${{ secrets.SERVER_PORT_DELETE_PRODUCT }} \
+              -e EC2_HOST_PRODUCT_GETALL=${{ secrets.EC2_HOST_PRODUCT_GETALL }} \
+              -e SERVER_PORT_GET_ALL_PRODUCTS=${{ secrets.SERVER_PORT_GET_ALL_PRODUCTS }} \
+              -e EC2_HOST_PRODUCT_GETBYID=${{ secrets.EC2_HOST_PRODUCT_GETBYID }} \
+              -e SERVER_PORT_GET_PRODUCT_BY_ID=${{ secrets.SERVER_PORT_GET_PRODUCT_BY_ID }} \
+              -e EC2_HOST_PRODUCT_UPDATE=${{ secrets.EC2_HOST_PRODUCT_UPDATE }} \
+              -e SERVER_PORT_UPDATE_PRODUCT=${{ secrets.SERVER_PORT_UPDATE_PRODUCT }} \
+              -e EC2_HOST_CREATE_CATEGORY=${{ secrets.EC2_HOST_CREATE_CATEGORY }} \
+              -e SERVER_PORT_CREATE_CATEGORY=${{ secrets.SERVER_PORT_CREATE_CATEGORY }} \
+              -e EC2_HOST_DELETE_CATEGORY=${{ secrets.EC2_HOST_DELETE_CATEGORY }} \
+              -e SERVER_PORT_DELETE_CATEGORY=${{ secrets.SERVER_PORT_DELETE_CATEGORY }} \
+              -e EC2_HOST_GET_ALL_CATEGORIES=${{ secrets.EC2_HOST_GET_ALL_CATEGORIES }} \
+              -e SERVER_PORT_GET_ALL_CATEGORIES=${{ secrets.SERVER_PORT_GET_ALL_CATEGORIES }} \
+              -e EC2_HOST_GET_CATEGORY_BY_ID=${{ secrets.EC2_HOST_GET_CATEGORY_BY_ID }} \
+              -e SERVER_PORT_GET_CATEGORY_BY_ID=${{ secrets.SERVER_PORT_GET_CATEGORY_BY_ID }} \
+              -e EC2_HOST_UPDATE_CATEGORY=${{ secrets.EC2_HOST_UPDATE_CATEGORY }} \
+              -e SERVER_PORT_UPDATE_CATEGORY=${{ secrets.SERVER_PORT_UPDATE_CATEGORY }} \
+              -e EC2_HOST_GRAPHQL=${{ secrets.EC2_HOST_GRAPHQL }} \
+              -e SERVER_PORT_GRAPHQL=${{ secrets.SERVER_PORT_GRAPHQL }} \
               --restart always \
               ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
 
